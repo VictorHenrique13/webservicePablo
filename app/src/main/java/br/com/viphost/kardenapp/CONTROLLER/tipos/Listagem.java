@@ -2,18 +2,18 @@ package br.com.viphost.kardenapp.CONTROLLER.tipos;
 
 public class Listagem {
     private Integer[] mesas = {};
-    private ListaCategorias categorias = null;
-    private ListaProdutos produtos = null;
+    private Categoria[] categorias = null;
+    private Produto[] produtos = null;
 
     public Integer[] getMesas() {
         return mesas;
     }
 
     public ListaCategorias getCategorias() {
-        return categorias;
+        return new ListaCategorias(categorias);
     }
 
     public ListaProdutos getProdutos() {
-        return produtos;
+        return new ListaProdutos(produtos);
     }
 }
