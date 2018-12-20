@@ -7,7 +7,12 @@ public class Produto {
     private int quantidade;
     private  Float preco;
 
-    public Produto(Integer id, String nome, int quantidade, Float valor){}
+    public Produto(Integer id, String nome, int quantidade, Float preco){
+        this.id=id;
+        this.nome=nome;
+        this.quantidade=quantidade;
+        this.preco=preco;
+    }
     public Produto(int id, String nome, int quantidade, Float preco,String nameCategoria){
         this.id=id;
         this.nome=nome;

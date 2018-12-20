@@ -88,7 +88,7 @@ public class PageCategoria extends AppCompatActivity {
                         if(count<tamanho){
                             if(prod.get(count).getId()!=next.getId()){
                                 int quantidade = 0;///VERIFICAR SE EXISTE QUANTIDADE DESSE ITEM NO CARRINHO
-                                Produto novo_produto = new Produto(next.getId(),next.getNome(),quantidade,next.getValor());
+                                Produto novo_produto = new Produto(next.getId(),next.getNome(),quantidade,next.getValor(),info);
                                 prod.set(count,novo_produto);
                                 runOnUiThread(new Runnable() {
                                     @Override
