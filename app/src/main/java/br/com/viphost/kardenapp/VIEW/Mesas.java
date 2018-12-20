@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import br.com.viphost.kardenapp.CONTROLLER.DAO.DbOpenhelper;
 import br.com.viphost.kardenapp.CONTROLLER.DeviceInfo;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlClient;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlError;
@@ -37,6 +38,7 @@ import br.com.viphost.kardenapp.CONTROLLER.tipos.Logico;
 import br.com.viphost.kardenapp.CONTROLLER.tipos.Mesa;
 import br.com.viphost.kardenapp.CONTROLLER.utils.AtualizarMesas;
 import br.com.viphost.kardenapp.CONTROLLER.utils.Balao;
+import br.com.viphost.kardenapp.CONTROLLER.utils.BinaryTool;
 import br.com.viphost.kardenapp.CONTROLLER.utils.Database;
 import br.com.viphost.kardenapp.R;
 import br.com.viphost.kardenapp.VIEW.Adapter.AdapterNoIcon;
@@ -63,6 +65,7 @@ public class Mesas extends AppCompatActivity {
     private ImageView menuUp;
     private AtualizarMesas atualizarMesas;
     private AdapterNoIcon adp;
+    private DbOpenhelper DB;
     @RequiresApi(api = Build.VERSION_CODES.M)
     @SuppressLint("NewApi")
     @Override
@@ -80,7 +83,12 @@ public class Mesas extends AppCompatActivity {
         t.setTitle("Mesa");
         t.setDisplayHomeAsUpEnabled(true);
         carShop.setVisibility(View.GONE);
-        //floatingActionButton.hide();
+        DB = new DbOpenhelper(this);
+        if(BinaryTool.BitValueOfInt(DB.getPermissao(),4)==false){
+            floatingActionButton.hide();
+            ((View) floatingActionButton).setVisibility(View.GONE);
+            //Esconder o botao de cadastro
+        }
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -29,6 +29,7 @@ public class DbOpenhelper extends SQLiteOpenHelper {
         Log.i(TAG,"Categoria criada");
         db.execSQL("create table if not exists mesas(id integer primary key autoincrement, numMesa text not null)");
         db.execSQL("create table if not exists produtos(id integer primary key autoincrement,nome text,valor double, quantidade INTEGER,nomeCategoria text)");
+        db.execSQL("CREATE TABLE if not exists login(id INTEGER primary key autoincrement,token text,permissao INTEGER)");
     }
 
     @Override
@@ -36,6 +37,39 @@ public class DbOpenhelper extends SQLiteOpenHelper {
 
     }
 
+    public void setLogin(String token, int permissao){
+        db = getReadableDatabase();
+        Cursor c = db.rawQuery("select * from login",null);
+        try {
+            ContentValues values = new ContentValues();
+            values.put("token",token);
+            values.put("permissao",permissao);
+            if(c.moveToFirst()){
+                int id = c.getInt(c.getColumnIndex("id"));
+                db.update("login",values,"id="+id, null);
+            }else{
+                db.insert("login","",values);
+            }
+        }finally {
+            db.close();
+        }
+    }
+    public void setPermissao(int permissao){
+        db = getReadableDatabase();
+        Cursor c = db.rawQuery("select * from login",null);
+        try {
+            ContentValues values = new ContentValues();
+            values.put("permissao",permissao);
+            if(c.moveToFirst()){
+                int id = c.getInt(c.getColumnIndex("id"));
+                db.update("login",values,"id="+id, null);
+            }else{
+                db.insert("login","",values);
+            }
+        }finally {
+            db.close();
+        }
+    }
     public void salvarMesa(int mesa){
             db = getReadableDatabase();
         try {
@@ -71,8 +105,28 @@ public class DbOpenhelper extends SQLiteOpenHelper {
             db.close();
         }
     }
+    public String getToken(){
+        db = getReadableDatabase();
+        Cursor c = db.rawQuery("select * from login",null);
+        String retorno = "vazio";
+        if(c.moveToFirst()){
+            retorno = c.getString(c.getColumnIndex("token"));
+        }
+        db.close();
+        return retorno;
+    }
+    public int getPermissao(){
+        db = getReadableDatabase();
+        Cursor c = db.rawQuery("select * from login",null);
+        int retorno = -1;
+        if(c.moveToFirst()){
+            retorno = c.getInt(c.getColumnIndex("permissao"));
+        }
+        db.close();
+        return retorno;
+    }
 
-    public ArrayList<String> getListaAtegoria(){
+    public ArrayList<String> getListaCategoria(){
         db = getReadableDatabase();
         ArrayList<String> nameCategoria = new ArrayList<>();
         Cursor c = db.rawQuery("select * from categoria",null);
@@ -98,7 +152,7 @@ public class DbOpenhelper extends SQLiteOpenHelper {
          db.close();
          return mesas;
     }
-    public ArrayList<Produto> getListProdutos(){
+    public ArrayList<Produto> getListaProdutos(){
         db = getReadableDatabase();
         ArrayList<Produto> produtos = new ArrayList<>();
         Cursor c = db.rawQuery("select * from produtos",null);

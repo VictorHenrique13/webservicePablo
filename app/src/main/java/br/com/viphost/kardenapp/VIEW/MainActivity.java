@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
+import br.com.viphost.kardenapp.CONTROLLER.DAO.DbOpenhelper;
 import br.com.viphost.kardenapp.CONTROLLER.utils.Database;
 import br.com.viphost.kardenapp.R;
 import br.com.viphost.kardenapp.VIEW.Pager.ViewPagerAdp;
@@ -30,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(!Database.tokenIsEmpty(getApplicationContext())){//Auto Ir Mesas Activity se ja logado
+        if(new DbOpenhelper(this).getToken()!="vazio"){//Auto Ir Mesas Activity se ja logado
             Intent m = new Intent(getApplicationContext(),Mesas.class);
             m.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(m);

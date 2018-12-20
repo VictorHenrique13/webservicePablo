@@ -58,11 +58,9 @@ public class Produto {
 
     public String getPreco() {
         return String.format("R$ %.2f", preco);
-        //Float.toString(preco);
     }
     public Float getFloatPreco() {
         return preco;
-        //Float.toString(preco);
     }
 
     public void setPreco(Float preco) {

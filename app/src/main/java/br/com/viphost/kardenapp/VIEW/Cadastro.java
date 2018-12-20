@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import br.com.viphost.kardenapp.CONTROLLER.DAO.DbOpenhelper;
 import br.com.viphost.kardenapp.CONTROLLER.DeviceInfo;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlClient;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlError;
@@ -87,8 +88,9 @@ public class Cadastro extends Fragment {
                             GraphqlResponse resposta = registro.run(nome,telefone,email,email,senha,deviceID);
                             if(resposta instanceof Login){
                                 Login login =(Login) resposta;
-                                Database.setToken(getContext(), login.getToken());
-                                Database.setPermission(getContext(),login.getPermissao());
+                                //Database.setToken(getContext(), login.getToken());
+                                //Database.setPermission(getContext(),login.getPermissao());
+                                new DbOpenhelper(getActivity()).setLogin(login.getToken(),login.getPermissao());
                                 new Balao(getActivity(),"Cadastro Realizado",Toast.LENGTH_LONG).show();
                                 Intent m = new Intent(getActivity(),Mesas.class);
                                 m.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
