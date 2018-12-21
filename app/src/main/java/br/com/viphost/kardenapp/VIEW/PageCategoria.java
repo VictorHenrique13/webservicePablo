@@ -18,6 +18,7 @@ import br.com.viphost.kardenapp.CONTROLLER.DeviceInfo;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlClient;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlError;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlResponse;
+import br.com.viphost.kardenapp.CONTROLLER.connections.mesas.AtualizarPermissao;
 import br.com.viphost.kardenapp.CONTROLLER.tipos.ListaProdutos;
 import br.com.viphost.kardenapp.CONTROLLER.queries.ListarProdutos;
 import br.com.viphost.kardenapp.CONTROLLER.utils.Balao;
@@ -63,6 +64,7 @@ public class PageCategoria extends AppCompatActivity {
         //--------------------------------------------
         t.setTitle(info);
         t.setDisplayHomeAsUpEnabled(true);
+        new AtualizarPermissao(this).run(true);
         final AdapterSingleCategoria adp = new AdapterSingleCategoria(PageCategoria.this,prod);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(PageCategoria.this);
         recyclerView.setLayoutManager(layoutManager);

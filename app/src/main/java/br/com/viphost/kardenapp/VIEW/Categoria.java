@@ -25,6 +25,7 @@ import br.com.viphost.kardenapp.CONTROLLER.DeviceInfo;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlClient;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlError;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlResponse;
+import br.com.viphost.kardenapp.CONTROLLER.connections.mesas.AtualizarPermissao;
 import br.com.viphost.kardenapp.CONTROLLER.tipos.ListaCategorias;
 import br.com.viphost.kardenapp.CONTROLLER.mutations.CadastrarCategoria;
 import br.com.viphost.kardenapp.CONTROLLER.queries.ListarCategorias;
@@ -70,6 +71,7 @@ public class Categoria extends AppCompatActivity {
         ActionBar t = getSupportActionBar();
         t.setTitle("Categoria");
         t.setDisplayHomeAsUpEnabled(true);
+        new AtualizarPermissao(this).run(true);
         DB = new DbOpenhelper(this);
         if(BinaryTool.BitValueOfInt(DB.getPermissao(),4)==false){
             CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams)floatingActionButton.getLayoutParams();

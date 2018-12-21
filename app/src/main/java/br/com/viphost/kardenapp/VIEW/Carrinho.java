@@ -20,6 +20,7 @@ import br.com.viphost.kardenapp.CONTROLLER.DeviceInfo;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlClient;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlError;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlResponse;
+import br.com.viphost.kardenapp.CONTROLLER.connections.mesas.AtualizarPermissao;
 import br.com.viphost.kardenapp.CONTROLLER.mutations.AdicionarPedido;
 import br.com.viphost.kardenapp.CONTROLLER.mutations.CadastrarMesa;
 import br.com.viphost.kardenapp.CONTROLLER.utils.Balao;
@@ -58,6 +59,7 @@ public class Carrinho extends AppCompatActivity {
         carShop = findViewById(R.id.imgCarrinho);
         recyclerView =findViewById(R.id.recyclerCarrinho);
 
+        new AtualizarPermissao(this).run(true);
         setSupportActionBar(toolbar);
         ActionBar t = getSupportActionBar();
         t.setTitle("Carrinho");
