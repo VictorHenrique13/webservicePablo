@@ -95,18 +95,7 @@ public class Mesas extends AppCompatActivity {
                 AlertDialog.Builder b = new AlertDialog.Builder(Mesas.this);
                 View msa = getLayoutInflater().inflate(R.layout.dialog_mesa,null);
                 edtMesas = msa.findViewById(R.id.numMesaTxtD);
-                LinearLayout bottom = findViewById(R.id.sliding);
-                final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottom);
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                menuUp = findViewById(R.id.menuUp);
-                menuUp.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        bottomSheetBehavior.setPeekHeight(340);
-                    }
-                });
+
 
 
 

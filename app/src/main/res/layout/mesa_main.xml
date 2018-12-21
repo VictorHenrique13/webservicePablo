@@ -7,10 +7,9 @@
     android:backgroundTint="@color/white"
     android:background="@color/white"
     android:layout_height="match_parent"
-    tools:context=".VIEW.Mesas">
+   >
 
     <include layout="@layout/toolbar" android:id="@+id/toolbar"/>
-
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerMesas"
