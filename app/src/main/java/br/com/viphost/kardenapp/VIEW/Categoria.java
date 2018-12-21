@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import br.com.viphost.kardenapp.CONTROLLER.DAO.DbOpenhelper;
 import br.com.viphost.kardenapp.CONTROLLER.DeviceInfo;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlClient;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlError;
@@ -28,6 +30,7 @@ import br.com.viphost.kardenapp.CONTROLLER.mutations.CadastrarCategoria;
 import br.com.viphost.kardenapp.CONTROLLER.queries.ListarCategorias;
 import br.com.viphost.kardenapp.CONTROLLER.utils.AtualizarMesas;
 import br.com.viphost.kardenapp.CONTROLLER.utils.Balao;
+import br.com.viphost.kardenapp.CONTROLLER.utils.BinaryTool;
 import br.com.viphost.kardenapp.CONTROLLER.utils.Database;
 import br.com.viphost.kardenapp.R;
 import br.com.viphost.kardenapp.VIEW.Adapter.AdapterWithIcon;
@@ -49,6 +52,7 @@ public class Categoria extends AppCompatActivity {
     private ImageView iconSearch;
     private ImageView carShop;
     private  String texto;
+    private DbOpenhelper DB;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if(AtualizarMesas.reference!=null){
@@ -66,6 +70,17 @@ public class Categoria extends AppCompatActivity {
         ActionBar t = getSupportActionBar();
         t.setTitle("Categoria");
         t.setDisplayHomeAsUpEnabled(true);
+        DB = new DbOpenhelper(this);
+        if(BinaryTool.BitValueOfInt(DB.getPermissao(),4)==false){
+            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams)floatingActionButton.getLayoutParams();
+            p.setAnchorId(View.NO_ID);
+            p.width = 0;
+            p.height = 0;
+            floatingActionButton.setLayoutParams(p);
+            floatingActionButton.hide();
+            //((View) floatingActionButton).setVisibility(View.GONE);
+            //Esconder o botao de cadastro
+        }
         carShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

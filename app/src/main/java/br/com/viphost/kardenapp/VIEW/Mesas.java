@@ -31,6 +31,7 @@ import br.com.viphost.kardenapp.CONTROLLER.DeviceInfo;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlClient;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlError;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlResponse;
+import br.com.viphost.kardenapp.CONTROLLER.connections.mesas.AtualizarPermissao;
 import br.com.viphost.kardenapp.CONTROLLER.mutations.CadastrarMesa;
 import br.com.viphost.kardenapp.CONTROLLER.mutations.Logout;
 import br.com.viphost.kardenapp.CONTROLLER.tipos.Logico;
@@ -83,10 +84,16 @@ public class Mesas extends AppCompatActivity {
         t.setTitle("Mesa");
         t.setDisplayHomeAsUpEnabled(true);
         carShop.setVisibility(View.GONE);
+        new AtualizarPermissao(this).run(true);
         DB = new DbOpenhelper(this);
         if(BinaryTool.BitValueOfInt(DB.getPermissao(),4)==false){
+            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams)floatingActionButton.getLayoutParams();
+            p.setAnchorId(View.NO_ID);
+            p.width = 0;
+            p.height = 0;
+            floatingActionButton.setLayoutParams(p);
             floatingActionButton.hide();
-            ((View) floatingActionButton).setVisibility(View.GONE);
+            //((View) floatingActionButton).setVisibility(View.GONE);
             //Esconder o botao de cadastro
         }
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -191,7 +198,8 @@ public class Mesas extends AppCompatActivity {
                     GraphqlError error = (GraphqlError)response;
                     Toast.makeText(getApplicationContext(), error.getMessage() + ". " + error.getCategory() + "[" + error.getCode() + "]", Toast.LENGTH_SHORT).show();
                 }
-                Database.setToken(getApplicationContext(),"");
+                //Database.setToken(getApplicationContext(),"");
+                DB.deleteLogin();
                 Intent m = new Intent(getApplicationContext(),MainActivity.class);
                 m.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 close.dismiss();
@@ -240,7 +248,8 @@ public class Mesas extends AppCompatActivity {
                             GraphqlError error = (GraphqlError)response;
                             Toast.makeText(getApplicationContext(), error.getMessage() + ". " + error.getCategory() + "[" + error.getCode() + "]", Toast.LENGTH_SHORT).show();
                         }
-                        Database.setToken(getApplicationContext(),"");
+                        //Database.setToken(getApplicationContext(),"");
+                        DB.deleteLogin();
                         Intent m = new Intent(getApplicationContext(),MainActivity.class);
                         m.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         close.dismiss();

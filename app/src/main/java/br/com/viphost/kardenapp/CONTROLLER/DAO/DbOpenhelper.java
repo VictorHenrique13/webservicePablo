@@ -54,6 +54,17 @@ public class DbOpenhelper extends SQLiteOpenHelper {
             db.close();
         }
     }
+    public void deleteLogin(){
+        db = getReadableDatabase();
+        Cursor c = db.rawQuery("select * from login",null);
+        try {
+            if(c.moveToFirst()){
+                db.delete("login",null,null);
+            }
+        }finally {
+            db.close();
+        }
+    }
     public void setPermissao(int permissao){
         db = getReadableDatabase();
         Cursor c = db.rawQuery("select * from login",null);

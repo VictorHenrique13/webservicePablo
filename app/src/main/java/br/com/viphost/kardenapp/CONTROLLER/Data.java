@@ -7,6 +7,7 @@ import br.com.viphost.kardenapp.CONTROLLER.tipos.Fechamento;
 import br.com.viphost.kardenapp.CONTROLLER.tipos.Listagem;
 import br.com.viphost.kardenapp.CONTROLLER.tipos.Login;
 import br.com.viphost.kardenapp.CONTROLLER.tipos.Registro;
+import br.com.viphost.kardenapp.CONTROLLER.tipos.Verificacao;
 
 public class Data {
     private Login login = null;
@@ -17,6 +18,7 @@ public class Data {
     private Adicao adicionar = null;
     private Listagem listar = null;
     private Cadastro cadastrar = null;
+    private Verificacao verificar = null;
 
     public Login getLogin() {
         return login;
@@ -48,5 +50,9 @@ public class Data {
 
     public Cadastro getCadastrar() {
         return cadastrar;
+    }
+
+    public Verificacao getVerificar() {
+        return verificar;
     }
 }
