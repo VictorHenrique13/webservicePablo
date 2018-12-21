@@ -63,6 +63,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/perfilAction"
             android:layout_width="match_parent"
             android:orientation="vertical"
             android:layout_marginTop="100dp"
@@ -72,8 +73,8 @@
                 android:padding="16dp"
                 android:layout_height="60dp">
                 <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/ic_perm_contact_calendar_black_24dp"/>
                 <TextView
@@ -87,12 +88,13 @@
                     />
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/cadastrarProdutoAction"
                 android:layout_width="match_parent"
                 android:padding="16dp"
                 android:layout_height="60dp">
                 <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/ic_add_shopping_cart_black_24dp"/>
                 <TextView
@@ -106,12 +108,13 @@
                     />
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/feedBackAction"
                 android:layout_width="match_parent"
                 android:padding="16dp"
                 android:layout_height="60dp">
                 <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/ic_chat_black_24dp"/>
                 <TextView
@@ -125,12 +128,13 @@
                     />
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/configurationAction"
                 android:layout_width="match_parent"
                 android:padding="16dp"
                 android:layout_height="60dp">
                 <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/ic_build_black_24dp"/>
                 <TextView

@@ -32,6 +32,7 @@ import br.com.viphost.kardenapp.CONTROLLER.utils.Database;
 import br.com.viphost.kardenapp.R;
 import br.com.viphost.kardenapp.VIEW.Adapter.AdapterWithIcon;
 import com.google.android.material.bottomappbar.BottomAppBar;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -49,6 +50,7 @@ public class Categoria extends AppCompatActivity {
     private ImageView iconSearch;
     private ImageView carShop;
     private  String texto;
+    private BottomSheetDialog bottomSheetDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if(AtualizarMesas.reference!=null){
@@ -63,6 +65,9 @@ public class Categoria extends AppCompatActivity {
         iconSearch = findViewById(R.id.iconSearch);
         carShop =findViewById(R.id.imgCarrinho);
         setSupportActionBar(toolbar);
+        bottomSheetDialog = new BottomSheetDialog(Categoria.this);
+        View modal = getLayoutInflater().inflate(R.layout.bottom_behavior,null);
+        bottomSheetDialog.setContentView(modal);
         ActionBar t = getSupportActionBar();
         t.setTitle("Categoria");
         t.setDisplayHomeAsUpEnabled(true);
@@ -70,6 +75,12 @@ public class Categoria extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(Categoria.this,Carrinho.class));
+            }
+        });
+        iconSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetDialog.show();
             }
         });
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(Categoria.this);

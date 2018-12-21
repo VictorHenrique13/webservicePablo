@@ -77,6 +77,7 @@ public class Mesas extends AppCompatActivity {
         bottomBar = (BottomAppBar) findViewById(R.id.bottomAppBar);
         iconSearch = findViewById(R.id.iconSearch);
         recyclerView = findViewById(R.id.recyclerMesas);
+        menuUp = findViewById(R.id.fera);
         floatingActionButton = findViewById(R.id.floatingG);
         carShop = findViewById(R.id.imgCarrinho);
         setSupportActionBar(toolbar);
@@ -96,18 +97,13 @@ public class Mesas extends AppCompatActivity {
                 View msa = getLayoutInflater().inflate(R.layout.dialog_mesa,null);
                 edtMesas = msa.findViewById(R.id.numMesaTxtD);
                 //---------------------------------------------------
-                Button menuUp = findViewById(R.id.menuU);
+
                 menuUp.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(Mesas.this,R.style.BottomSheetDialog);
-                        View modalSheet = getLayoutInflater().inflate(R.layout.bottom_behavior,null);
-                        bottomSheetDialog.setContentView(modalSheet);
-                        bottomSheetDialog.show();
+
                     }
                 });
-
-
 
                 //---------------------------------------------------
                 btnSave = msa.findViewById(R.id.btnSalvarMesaD);
