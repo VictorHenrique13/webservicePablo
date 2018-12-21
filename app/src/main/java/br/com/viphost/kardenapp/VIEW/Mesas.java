@@ -44,6 +44,7 @@ import br.com.viphost.kardenapp.R;
 import br.com.viphost.kardenapp.VIEW.Adapter.AdapterNoIcon;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -67,7 +68,7 @@ public class Mesas extends AppCompatActivity {
     private AdapterNoIcon adp;
     private DbOpenhelper DB;
     @RequiresApi(api = Build.VERSION_CODES.M)
-    @SuppressLint("NewApi")
+    @SuppressLint({"NewApi", "RestrictedApi"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,8 +86,7 @@ public class Mesas extends AppCompatActivity {
         carShop.setVisibility(View.GONE);
         DB = new DbOpenhelper(this);
         if(BinaryTool.BitValueOfInt(DB.getPermissao(),4)==false){
-            floatingActionButton.hide();
-            ((View) floatingActionButton).setVisibility(View.GONE);
+            floatingActionButton.setVisibility(View.GONE);
             //Esconder o botao de cadastro
         }
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -95,7 +95,17 @@ public class Mesas extends AppCompatActivity {
                 AlertDialog.Builder b = new AlertDialog.Builder(Mesas.this);
                 View msa = getLayoutInflater().inflate(R.layout.dialog_mesa,null);
                 edtMesas = msa.findViewById(R.id.numMesaTxtD);
-
+                //---------------------------------------------------
+                Button menuUp = findViewById(R.id.menuU);
+                menuUp.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(Mesas.this,R.style.BottomSheetDialog);
+                        View modalSheet = getLayoutInflater().inflate(R.layout.bottom_behavior,null);
+                        bottomSheetDialog.setContentView(modalSheet);
+                        bottomSheetDialog.show();
+                    }
+                });
 
 
 
