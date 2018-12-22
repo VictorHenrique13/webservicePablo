@@ -27,6 +27,7 @@ import br.com.viphost.kardenapp.MODEL.Produto;
 import br.com.viphost.kardenapp.R;
 import br.com.viphost.kardenapp.VIEW.Adapter.AdapterSingleCategoria;
 import com.google.android.material.bottomappbar.BottomAppBar;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
 
@@ -39,6 +40,7 @@ public class PageCategoria extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ArrayList<Produto> prod = new ArrayList<Produto>();
     private Produto produto;
+    private BottomSheetDialog bottomSheetDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +50,10 @@ public class PageCategoria extends AppCompatActivity {
         iconSearch = findViewById(R.id.searchProdutoSingle);
         carShop = findViewById(R.id.carShopProdutoSingle);
         recyclerView = findViewById(R.id.recyclerPageCategoria);
-
+        menu = findViewById(R.id.menuProdutoSingle);
+        bottomSheetDialog = new BottomSheetDialog(PageCategoria.this);
+        View modal = getLayoutInflater().inflate(R.layout.bottom_behavior,null);
+        bottomSheetDialog.setContentView(modal);
         carShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,6 +69,12 @@ public class PageCategoria extends AppCompatActivity {
         //--------------------------------------------
         t.setTitle(info);
         t.setDisplayHomeAsUpEnabled(true);
+        menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetDialog.show();
+            }
+        });
         new AtualizarPermissao(this).run(true);
         final AdapterSingleCategoria adp = new AdapterSingleCategoria(PageCategoria.this,prod);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(PageCategoria.this);

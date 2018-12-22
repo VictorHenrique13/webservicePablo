@@ -44,6 +44,7 @@ import br.com.viphost.kardenapp.R;
 import br.com.viphost.kardenapp.VIEW.Adapter.AdapterNoIcon;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -66,6 +67,7 @@ public class Mesas extends AppCompatActivity {
     private AtualizarMesas atualizarMesas;
     private AdapterNoIcon adp;
     private DbOpenhelper DB;
+    private BottomSheetDialog bottomSheetDialog;
     @RequiresApi(api = Build.VERSION_CODES.M)
     @SuppressLint("NewApi")
     @Override
@@ -78,6 +80,7 @@ public class Mesas extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerMesas);
         floatingActionButton = findViewById(R.id.floatingG);
         carShop = findViewById(R.id.imgCarrinho);
+        menuUp = findViewById(R.id.menuUp);
         setSupportActionBar(toolbar);
         ActionBar t = getSupportActionBar();
         t.setTitle("Mesa");
@@ -95,7 +98,16 @@ public class Mesas extends AppCompatActivity {
                 AlertDialog.Builder b = new AlertDialog.Builder(Mesas.this);
                 View msa = getLayoutInflater().inflate(R.layout.dialog_mesa,null);
                 edtMesas = msa.findViewById(R.id.numMesaTxtD);
-
+                //--------------------------------------------
+                bottomSheetDialog = new BottomSheetDialog(Mesas.this);
+                View modal = getLayoutInflater().inflate(R.layout.bottom_behavior,null);
+                bottomSheetDialog.setContentView(modal);
+                menuUp.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        bottomSheetDialog.show();
+                    }
+                });
 
 
 
@@ -219,7 +231,7 @@ public class Mesas extends AppCompatActivity {
             }
         });
         close.show();
-        //super.onBackPressed();
+        super.onBackPressed();
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -241,11 +253,12 @@ public class Mesas extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), error.getMessage() + ". " + error.getCategory() + "[" + error.getCode() + "]", Toast.LENGTH_SHORT).show();
                         }
                         Database.setToken(getApplicationContext(),"");
-                        Intent m = new Intent(getApplicationContext(),MainActivity.class);
-                        m.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
                         close.dismiss();
                         //----------------------------
                         atualizarMesas.finish();
+                        Intent m = new Intent(Mesas.this,MainActivity.class);
+                        m.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(m);
                         finish();
                     }
