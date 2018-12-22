@@ -5,7 +5,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_karden"
         android:label="@string/app_name"
@@ -13,19 +12,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".VIEW.CadastroProduto"/>
+        <activity android:name=".VIEW.CadastroProduto" />
         <activity android:name=".VIEW.Carrinho" />
         <activity android:name=".VIEW.PageCategoria" />
-        <activity android:name=".VIEW.Categoria" />
-        <activity android:name=".VIEW.Mesas" />
-        <activity
-            android:name=".VIEW.MainActivity"
-            android:screenOrientation="portrait">
+        <activity android:name=".VIEW.Categoria" >
+        </activity>
+        <activity android:name=".VIEW.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".VIEW.Mesas"></activity>
     </application>
 
 </manifest>

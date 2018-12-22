@@ -32,13 +32,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         String token = new DbOpenhelper(this).getToken();
-        if(!token.isEmpty()&&token!="vazio"){//Auto Ir Mesas Activity se ja logado
-            Intent m = new Intent(getApplicationContext(),Mesas.class);
-            m.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(m);
-            finish();
-            return;
-        }
+        //if(!token.isEmpty()&&token!="vazio"){//Auto Ir Mesas Activity se ja logado
+           // Intent m = new Intent(getApplicationContext(),Mesas.class);
+           // startActivity(m);
+            //finish();
+           // return;
+       // }
         setContentView(R.layout.activity_main);
 
         tabLayout = findViewById(R.id.containerTabs);

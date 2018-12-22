@@ -10,14 +10,10 @@ import br.com.viphost.kardenapp.CONTROLLER.DeviceInfo;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlClient;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlError;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlResponse;
-import br.com.viphost.kardenapp.CONTROLLER.mutations.CadastrarMesa;
 import br.com.viphost.kardenapp.CONTROLLER.queries.VerificarPermissao;
 import br.com.viphost.kardenapp.CONTROLLER.tipos.Inteiro;
-import br.com.viphost.kardenapp.CONTROLLER.tipos.Logico;
 import br.com.viphost.kardenapp.CONTROLLER.utils.Balao;
-import br.com.viphost.kardenapp.CONTROLLER.utils.Database;
 import br.com.viphost.kardenapp.VIEW.MainActivity;
-import br.com.viphost.kardenapp.VIEW.Mesas;
 
 public class AtualizarPermissao {
     private final Activity ACTIVITY;
