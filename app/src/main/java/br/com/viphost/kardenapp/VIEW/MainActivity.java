@@ -31,7 +31,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(new DbOpenhelper(this).getToken()!="vazio"){//Auto Ir Mesas Activity se ja logado
+        String token = new DbOpenhelper(this).getToken();
+        if(!token.isEmpty()&&token!="vazio"){//Auto Ir Mesas Activity se ja logado
             Intent m = new Intent(getApplicationContext(),Mesas.class);
             m.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(m);

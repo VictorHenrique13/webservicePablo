@@ -30,8 +30,10 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0-beta01'
     implementation 'com.google.code.gson:gson:2.8.2'
     testImplementation 'junit:junit:4.12'
-    implementation 'com.sothree.slidinguppanel:library:3.4.0'
     implementation 'com.google.android.material:material:1.0.0'
+    implementation ('com.sothree.slidinguppanel:library:3.4.0'){
+        exclude group: 'com.android.support'
+    }
 
 
 }
