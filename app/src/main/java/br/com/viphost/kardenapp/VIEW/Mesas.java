@@ -106,12 +106,6 @@ public class Mesas extends AppCompatActivity {
                 AlertDialog.Builder b = new AlertDialog.Builder(Mesas.this);
                 View msa = getLayoutInflater().inflate(R.layout.dialog_mesa,null);
                 edtMesas = msa.findViewById(R.id.numMesaTxtD);
-                //--------------------------------------------
-
-
-
-
-                //---------------------------------------------------
                 btnSave = msa.findViewById(R.id.btnSalvarMesaD);
                 btnSave.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -161,6 +155,8 @@ public class Mesas extends AppCompatActivity {
 
             }
         });
+
+
         AdapterNoIcon adp = new AdapterNoIcon(Mesas.this,ms);
         RecyclerView.LayoutManager mg = new LinearLayoutManager(Mesas.this);
         recyclerView.setLayoutManager(mg);
@@ -188,52 +184,6 @@ public class Mesas extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() {
-
-        AlertDialog.Builder b = new AlertDialog.Builder(Mesas.this);
-        b.setMessage("Deseja realmente sair da sessão");
-        b.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                //logout  é realizado aqui
-                final GraphqlClient graphqlClient = new GraphqlClient();
-                final String deviceID = new DeviceInfo().getDeviceID(getApplicationContext());
-                GraphqlResponse response = new Logout(graphqlClient).run(Database.getToken(getApplicationContext()),deviceID);
-                if(response instanceof GraphqlError){
-                    GraphqlError error = (GraphqlError)response;
-                    Toast.makeText(getApplicationContext(), error.getMessage() + ". " + error.getCategory() + "[" + error.getCode() + "]", Toast.LENGTH_SHORT).show();
-                }
-                Database.setToken(getApplicationContext(),"");
-                Intent m = new Intent(getApplicationContext(),MainActivity.class);
-                m.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                close.dismiss();
-                //----------------------------
-                atualizarMesas.finish();
-                startActivity(m);
-                finish();
-            }
-        });
-        b.setNegativeButton("Não", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                close.dismiss();
-            }
-        });
-        b.setCancelable(true);//Destravei puq acho chato app que me impeça de usar o back :p
-        //Tenta implementar aquele negocio de 3 backs pra fechar que fica melhor
-        close = b.create();
-        close.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                atualizarMesas.finish();
-                close.dismiss();
-                finish();
-            }
-        });
-        close.show();
-        super.onBackPressed();
-    }
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id){
@@ -257,10 +207,8 @@ public class Mesas extends AppCompatActivity {
                         close.dismiss();
                         //----------------------------
                         atualizarMesas.finish();
-                        Intent m = new Intent(Mesas.this,MainActivity.class);
-                        m.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(m);
-                        finish();
+
+                        startActivity(new Intent(Mesas.this,MainActivity.class));
                     }
                 });
                 b.setNegativeButton("Não", new DialogInterface.OnClickListener() {

@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".VIEW.CadastroProduto"></activity>
+
+        <activity android:name=".VIEW.CadastroProduto"/>
         <activity android:name=".VIEW.Carrinho" />
         <activity android:name=".VIEW.PageCategoria" />
         <activity android:name=".VIEW.Categoria" />
@@ -22,7 +23,6 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
