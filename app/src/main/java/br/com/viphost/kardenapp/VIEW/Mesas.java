@@ -68,8 +68,7 @@ public class Mesas extends AppCompatActivity {
     private AdapterNoIcon adp;
     private DbOpenhelper DB;
     private BottomSheetDialog bottomSheetDialog;
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    @SuppressLint("NewApi")
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +91,15 @@ public class Mesas extends AppCompatActivity {
             ((View) floatingActionButton).setVisibility(View.GONE);
             //Esconder o botao de cadastro
         }
+        bottomSheetDialog = new BottomSheetDialog(Mesas.this);
+        View modal = getLayoutInflater().inflate(R.layout.bottom_behavior,null);
+        bottomSheetDialog.setContentView(modal);
+        menuUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetDialog.show();
+            }
+        });
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,15 +107,7 @@ public class Mesas extends AppCompatActivity {
                 View msa = getLayoutInflater().inflate(R.layout.dialog_mesa,null);
                 edtMesas = msa.findViewById(R.id.numMesaTxtD);
                 //--------------------------------------------
-                bottomSheetDialog = new BottomSheetDialog(Mesas.this);
-                View modal = getLayoutInflater().inflate(R.layout.bottom_behavior,null);
-                bottomSheetDialog.setContentView(modal);
-                menuUp.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        bottomSheetDialog.show();
-                    }
-                });
+
 
 
 
