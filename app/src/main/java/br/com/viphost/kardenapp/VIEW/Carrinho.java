@@ -30,6 +30,7 @@ import br.com.viphost.kardenapp.R;
 import br.com.viphost.kardenapp.VIEW.Adapter.AdapterSingleCategoria;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class Carrinho extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ArrayList<Produto> prods = new ArrayList<>();
     private AlertDialog confirm;
-
+    private BottomSheetDialog bottomSheetDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +58,7 @@ public class Carrinho extends AppCompatActivity {
         floatingActionButton = findViewById(R.id.floatingG);
         iconSearch = findViewById(R.id.iconSearch);
         carShop = findViewById(R.id.imgCarrinho);
+        menu = findViewById(R.id.menuUp);
         recyclerView =findViewById(R.id.recyclerCarrinho);
 
         new AtualizarPermissao(this).run(true);
@@ -66,6 +68,15 @@ public class Carrinho extends AppCompatActivity {
         t.setDisplayHomeAsUpEnabled(true);
         final AdapterSingleCategoria adp = new AdapterSingleCategoria(Carrinho.this,prods);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(Carrinho.this);
+        bottomSheetDialog = new BottomSheetDialog(Carrinho.this);
+        View modal = getLayoutInflater().inflate(R.layout.bottom_behavior,null);
+        bottomSheetDialog.setContentView(modal);
+        menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetDialog.show();
+            }
+        });
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adp);
