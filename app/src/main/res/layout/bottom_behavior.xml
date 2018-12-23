@@ -12,8 +12,7 @@
 
         <LinearLayout
             android:padding="16dp"
-            android:elevation="4dp"
-            android:background="#f1f1f1"
+            android:background="#fff"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:orientation="horizontal"
@@ -63,14 +62,18 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/perfilAction"
+
             android:layout_width="match_parent"
             android:orientation="vertical"
             android:layout_marginTop="100dp"
             android:layout_height="match_parent">
+
             <LinearLayout
+                android:id="@+id/perfilAction"
                 android:layout_width="match_parent"
                 android:padding="16dp"
+                android:backgroundTint="@color/white"
+                android:background="@drawable/riple"
                 android:layout_height="60dp">
                 <ImageView
                     android:layout_width="16dp"
@@ -87,6 +90,7 @@
                     android:layout_marginLeft="16dp"
                     />
             </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/cadastrarProdutoAction"
                 android:layout_width="match_parent"
