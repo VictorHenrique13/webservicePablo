@@ -17,6 +17,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Layout;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -116,6 +118,53 @@ public class Mesas extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder b = new AlertDialog.Builder(Mesas.this);
+                View cadastroDialog = LayoutInflater.from(Mesas.this).inflate(R.layout.cadastro_produto,null);
+                edtNomeProdCad = cadastroDialog.findViewById(R.id.edtNomeProdCad);
+                edtPrecoProdCad = cadastroDialog.findViewById(R.id.edtPrecoCad);
+                layNomeProdCad = cadastroDialog.findViewById(R.id.layNomeProdCad);
+                layPrecoCad = cadastroDialog.findViewById(R.id.layPrecoCad);
+                btnConfirmCad = cadastroDialog.findViewById(R.id.btnConfirmCad);
+                btnCancelCad = cadastroDialog.findViewById(R.id.btnCancelCad);
+                //dados para envio em formato usavel
+                //caso algum tipo de variavel esta errado so realizar troca
+
+                //-----------------------------------------------------------------------------
+
+                btnConfirmCad.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(validateCadastroProd()){
+                            //conexao server aqui
+
+
+                            //-------------------------------
+                            //conexao offline aqui-------
+
+
+
+                            //-----------------------------
+
+                            edtPrecoProdCad.setText("");
+                            edtNomeProdCad.setText("");
+                            edtNomeProdCad.findFocus();
+                            alertCadastroProduto.dismiss();
+                        }else{
+                            Toast.makeText(Mesas.this,"Deve digitar algum valor!",Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                });
+                btnCancelCad.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alertCadastroProduto.dismiss();
+                    }
+                });
+
+                    b.setTitle("Cadastro Produto");
+                    b.setView(cadastroDialog);
+                    alertCadastroProduto = b.create();
+                    alertCadastroProduto.show();
             }
         });
 
