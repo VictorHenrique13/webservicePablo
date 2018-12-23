@@ -11,7 +11,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".VIEW.CadastrarProduto"></activity>
         <activity android:name=".VIEW.Carrinho" />
         <activity android:name=".VIEW.PageCategoria" />
         <activity android:name=".VIEW.Categoria"></activity>
