@@ -22,10 +22,13 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,8 +73,11 @@ public class Mesas extends AppCompatActivity {
     private AtualizarMesas atualizarMesas;
     private AdapterNoIcon adp;
     private BottomSheetDialog bottomSheetDialog;
+    private Spinner spinner;
+    private String nomeCategoria;
     private LinearLayout btnCadastrarProduto;
     private AlertDialog alertCadastroProduto;
+    private String[] categorias = {"Categorias","fera","loko"};
     //referencias da dialog Cadasreo produto
     private TextInputLayout layNomeProdCad;
     private TextInputLayout layPrecoCad;
@@ -125,11 +131,30 @@ public class Mesas extends AppCompatActivity {
                 layPrecoCad = cadastroDialog.findViewById(R.id.layPrecoCad);
                 btnConfirmCad = cadastroDialog.findViewById(R.id.btnConfirmCad);
                 btnCancelCad = cadastroDialog.findViewById(R.id.btnCancelCad);
+                spinner = cadastroDialog.findViewById(R.id.spinner);
+                ArrayAdapter sp = new ArrayAdapter(Mesas.this,R.layout.support_simple_spinner_dropdown_item,categorias);
+                sp.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+                spinner.setAdapter(sp);
                 //dados para envio em formato usavel
                 //caso algum tipo de variavel esta errado so realizar troca
 
-                //-----------------------------------------------------------------------------
+                String nomeProdutoCadastro = edtNomeProdCad.getText().toString();
+                String precoProdutoCAdastro = edtPrecoProdCad.getText().toString();
 
+                //-----------------------------------------------------------------------------
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                            nomeCategoria = (String) parent.getItemAtPosition(position);
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        Toast.makeText(Mesas.this,"Escolha uma opção válida",Toast.LENGTH_SHORT).show();
+                    }
+                });
                 btnConfirmCad.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -228,6 +253,7 @@ public class Mesas extends AppCompatActivity {
         });
         //fim flaoting button
         //recycler view inicio
+
         AdapterNoIcon adp = new AdapterNoIcon(Mesas.this,ms);
         RecyclerView.LayoutManager mg = new LinearLayoutManager(Mesas.this);
         recyclerView.setLayoutManager(mg);

@@ -27,6 +27,8 @@
             />
     </com.google.android.material.textfield.TextInputLayout>
 
+
+
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:id="@+id/layPrecoCad"
@@ -43,6 +45,17 @@
             android:hint="Preço"
             />
     </com.google.android.material.textfield.TextInputLayout>
+    <Spinner
+        android:autofillHints="Escolha Produto"
+        android:dropDownWidth="match_parent"
+        android:id="@+id/spinner"
+        android:theme="@style/Widget.AppCompat.Light.DropDownItem.Spinner"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="32dp"
+        android:layout_width="match_parent"
+        android:layout_height="56dp" />
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:orientation="horizontal"

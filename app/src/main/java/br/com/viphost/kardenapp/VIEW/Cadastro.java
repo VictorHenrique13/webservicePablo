@@ -108,16 +108,6 @@ public class Cadastro extends Fragment {
                     new Thread(runnable).start();
                     ///----------------------
 
-                    //Esse Toast vai dentro da conexão, pois nem sempre vai da sucesso, pode ser que deu um erro
-                    //Toast.makeText(getActivity(),"Cadastro Realizado",Toast.LENGTH_LONG).show();
-                    //TabLayout tab = getActivity().findViewById(R.id.containerTabs);
-                   //tab.getTabAt(0).select();
-                   //edtNome.setText("");
-                   //edtTelefone.setText("");
-                   //edtEmailC.setText("");
-                   //edtSenhaC.setText("");
-                   //edtNome.findFocus();
-
 
                 }else{
 
