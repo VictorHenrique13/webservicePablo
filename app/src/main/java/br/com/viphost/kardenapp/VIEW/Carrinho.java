@@ -11,9 +11,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import br.com.viphost.kardenapp.CONTROLLER.DeviceInfo;
@@ -32,6 +38,8 @@ import br.com.viphost.kardenapp.VIEW.Adapter.AdapterSingleCategoria;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 
@@ -48,6 +56,21 @@ public class Carrinho extends AppCompatActivity {
     private ArrayList<Produto> prods = new ArrayList<>();
     private AlertDialog confirm;
     private BottomSheetDialog bottomSheetDialog;
+
+
+    private TextInputLayout layNomeProdCad;
+    private TextInputLayout layPrecoCad;
+    private TextInputLayout layQuantidadeCad;
+    private TextInputEditText edtNomeProdCad;
+    private TextInputEditText edtQuantidadeProdCad;
+    private TextInputEditText edtPrecoProdCad;
+    private TextView btnConfirmCad;
+    private TextView btnCancelCad;
+    private LinearLayout btnCadastrarProduto;
+    private Spinner spinner;
+    private String[] categorias = {"Categorias"};
+    private String nomeCategoria;
+    private androidx.appcompat.app.AlertDialog alertCadastroProduto;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +100,85 @@ public class Carrinho extends AppCompatActivity {
                 bottomSheetDialog.show();
             }
         });
+
+
+
+        //funçoes menu deslizante-------------------------------
+        btnCadastrarProduto = modal.findViewById(R.id.cadastrarProdutoAction);
+        btnCadastrarProduto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                androidx.appcompat.app.AlertDialog.Builder b = new androidx.appcompat.app.AlertDialog.Builder(Carrinho.this);
+                View cadastroDialog = LayoutInflater.from(Carrinho.this).inflate(R.layout.cadastro_produto,null);
+                edtNomeProdCad = cadastroDialog.findViewById(R.id.edtNomeProdCad);
+                edtPrecoProdCad = cadastroDialog.findViewById(R.id.edtPrecoCad);
+                layNomeProdCad = cadastroDialog.findViewById(R.id.layNomeProdCad);
+                layPrecoCad = cadastroDialog.findViewById(R.id.layPrecoCad);
+                btnConfirmCad = cadastroDialog.findViewById(R.id.btnConfirmCad);
+                btnCancelCad = cadastroDialog.findViewById(R.id.btnCancelCad);
+                spinner = cadastroDialog.findViewById(R.id.spinner);
+                ArrayAdapter sp = new ArrayAdapter(Carrinho.this,R.layout.support_simple_spinner_dropdown_item,categorias);
+                sp.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+                spinner.setAdapter(sp);
+                //dados para envio em formato usavel
+                //caso algum tipo de variavel esta errado so realizar troca
+
+                String nomeProdutoCadastro = edtNomeProdCad.getText().toString();
+                String precoProdutoCAdastro = edtPrecoProdCad.getText().toString();
+
+                //-----------------------------------------------------------------------------
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                        nomeCategoria = (String) parent.getItemAtPosition(position);
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        Toast.makeText(Carrinho.this,"Escolha uma opção válida",Toast.LENGTH_SHORT).show();
+                    }
+                });
+                btnConfirmCad.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(validateCadastroProd()){
+                            //conexao server aqui
+
+
+                            //-------------------------------
+                            //conexao offline aqui-------
+
+
+
+                            //-----------------------------
+
+                            edtPrecoProdCad.setText("");
+                            edtNomeProdCad.setText("");
+                            edtNomeProdCad.findFocus();
+                            alertCadastroProduto.dismiss();
+                        }else{
+                            Toast.makeText(Carrinho.this,"Deve digitar algum valor!",Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                });
+                btnCancelCad.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alertCadastroProduto.dismiss();
+                    }
+                });
+
+                b.setTitle("Cadastro Produto");
+                b.setView(cadastroDialog);
+                alertCadastroProduto = b.create();
+                alertCadastroProduto.show();
+            }
+        });
+
+        //--------------------------------------
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adp);
@@ -132,6 +234,10 @@ public class Carrinho extends AppCompatActivity {
         });
 
 
+    }
+
+    private boolean validateCadastroProd() {
+        return  true;
     }
 
     @Override

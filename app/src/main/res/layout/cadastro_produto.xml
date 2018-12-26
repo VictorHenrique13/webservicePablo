@@ -45,8 +45,11 @@
             android:hint="Preço"
             />
     </com.google.android.material.textfield.TextInputLayout>
+
     <Spinner
+        android:dropDownSelector="@color/colorPrimaryDark"
         android:autofillHints="Escolha Produto"
+        android:drawSelectorOnTop="true"
         android:dropDownWidth="match_parent"
         android:id="@+id/spinner"
         android:theme="@style/Widget.AppCompat.Light.DropDownItem.Spinner"
