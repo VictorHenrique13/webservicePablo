@@ -11,9 +11,10 @@
         android:roundIcon="@drawable/ic_ds_"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".VIEW.Pedidos"></activity>
         <activity android:name=".VIEW.Carrinho" />
         <activity android:name=".VIEW.PageCategoria" />
-        <activity android:name=".VIEW.Categoria"></activity>
+        <activity android:name=".VIEW.Categoria" />
         <activity android:name=".VIEW.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
