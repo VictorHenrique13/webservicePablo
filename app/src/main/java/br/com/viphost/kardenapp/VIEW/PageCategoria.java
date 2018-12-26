@@ -78,6 +78,7 @@ public class PageCategoria extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerPageCategoria);
         menu = findViewById(R.id.menuProdutoSingle);
         DB = new DbOpenhelper(this);
+        new AtualizarPermissao(this).run(true);
         bottomSheetDialog = new BottomSheetDialog(PageCategoria.this);
         View modal = getLayoutInflater().inflate(R.layout.bottom_behavior,null);
         bottomSheetDialog.setContentView(modal);
@@ -179,7 +180,6 @@ public class PageCategoria extends AppCompatActivity {
         });
 
         //--------------------------------------
-        new AtualizarPermissao(this).run(true);
         final AdapterSingleCategoria adp = new AdapterSingleCategoria(PageCategoria.this,prod);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(PageCategoria.this);
         recyclerView.setLayoutManager(layoutManager);

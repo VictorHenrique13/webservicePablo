@@ -85,7 +85,6 @@ public class Carrinho extends AppCompatActivity {
         menu = findViewById(R.id.menuUp);
         recyclerView =findViewById(R.id.recyclerCarrinho);
         DB = new DbOpenhelper(this);
-
         new AtualizarPermissao(this).run(true);
         setSupportActionBar(toolbar);
         ActionBar t = getSupportActionBar();

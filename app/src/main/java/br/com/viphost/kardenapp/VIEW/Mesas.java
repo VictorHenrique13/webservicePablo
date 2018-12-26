@@ -6,6 +6,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,12 +35,14 @@ import br.com.viphost.kardenapp.CONTROLLER.DeviceInfo;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlClient;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlError;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlResponse;
+import br.com.viphost.kardenapp.CONTROLLER.connections.mesas.AtualizarPermissao;
 import br.com.viphost.kardenapp.CONTROLLER.mutations.CadastrarMesa;
 import br.com.viphost.kardenapp.CONTROLLER.mutations.Logout;
 import br.com.viphost.kardenapp.CONTROLLER.tipos.Logico;
 
 import br.com.viphost.kardenapp.CONTROLLER.utils.AtualizarMesas;
 import br.com.viphost.kardenapp.CONTROLLER.utils.Balao;
+import br.com.viphost.kardenapp.CONTROLLER.utils.BinaryTool;
 import br.com.viphost.kardenapp.CONTROLLER.utils.Memoria;
 import br.com.viphost.kardenapp.R;
 import br.com.viphost.kardenapp.VIEW.Adapter.AdapterNoIcon;
@@ -108,6 +111,18 @@ public class Mesas extends AppCompatActivity {
         View modal = getLayoutInflater().inflate(R.layout.bottom_behavior,null);
         bottomSheetDialog.setContentView(modal);
         menuUp = findViewById(R.id.menuUp);
+
+        new AtualizarPermissao(this).run(true);
+        if(BinaryTool.BitValueOfInt(DB.getPermissao(),4)==false){
+            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams)floatingActionButton.getLayoutParams();
+            p.setAnchorId(View.NO_ID);
+            p.width = 0;
+            p.height = 0;
+            floatingActionButton.setLayoutParams(p);
+            floatingActionButton.hide();
+            //((View) floatingActionButton).setVisibility(View.GONE);
+            //Esconder o botao de cadastro
+        }
         menuUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
