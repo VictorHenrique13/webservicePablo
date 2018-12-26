@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import br.com.viphost.kardenapp.CONTROLLER.utils.Database;
+import br.com.viphost.kardenapp.CONTROLLER.utils.Memoria;
 import br.com.viphost.kardenapp.MODEL.Produto;
 import br.com.viphost.kardenapp.R;
 import br.com.viphost.kardenapp.VIEW.Holder.ViewH;
@@ -33,17 +33,17 @@ public class AdapterSingleCategoria extends RecyclerView.Adapter<ViewH> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewH holder, int position) {
-        final String mesa = Database.getMesaAtual();
+        final String mesa = Memoria.getMesaAtual();
         final Produto p = produtos.get(position);
         holder.txtTitleProdutoSingle.setText(p.getNome());
         //holder.txtQuantidadeSingle.setText(p.getQuantidade());
-        holder.txtQuantidadeSingle.setText(Database.getQntCarrinho(mesa,p)+"");
+        holder.txtQuantidadeSingle.setText(Memoria.getQntCarrinho(mesa,p)+"");
         holder.txtPrecoSingle.setText(p.getPreco());
         holder.add.setClickable(true);
         holder.add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Database.addToCarrinho(mesa,p);
+                Memoria.addToCarrinho(mesa,p);
                 notifyDataSetChanged();
             }
         });
@@ -51,7 +51,7 @@ public class AdapterSingleCategoria extends RecyclerView.Adapter<ViewH> {
         holder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Database.removeToCarrinho(mesa,p);
+                Memoria.removeToCarrinho(mesa,p);
                 notifyDataSetChanged();
             }
         });

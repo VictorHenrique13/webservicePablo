@@ -6,18 +6,15 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,6 +29,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import br.com.viphost.kardenapp.CONTROLLER.DAO.DbOpenhelper;
 import br.com.viphost.kardenapp.CONTROLLER.DeviceInfo;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlClient;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlError;
@@ -40,22 +38,18 @@ import br.com.viphost.kardenapp.CONTROLLER.mutations.CadastrarMesa;
 import br.com.viphost.kardenapp.CONTROLLER.mutations.Logout;
 import br.com.viphost.kardenapp.CONTROLLER.tipos.Logico;
 
-import br.com.viphost.kardenapp.CONTROLLER.tipos.Mesa;
 import br.com.viphost.kardenapp.CONTROLLER.utils.AtualizarMesas;
 import br.com.viphost.kardenapp.CONTROLLER.utils.Balao;
-import br.com.viphost.kardenapp.CONTROLLER.utils.Database;
+import br.com.viphost.kardenapp.CONTROLLER.utils.Memoria;
 import br.com.viphost.kardenapp.R;
 import br.com.viphost.kardenapp.VIEW.Adapter.AdapterNoIcon;
 import com.google.android.material.bottomappbar.BottomAppBar;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Mesas extends AppCompatActivity {
     private Toolbar toolbar;
@@ -88,6 +82,7 @@ public class Mesas extends AppCompatActivity {
     private TextView btnConfirmCad;
     private TextView btnCancelCad;
     //----------------------------
+    private DbOpenhelper DB;
     @RequiresApi(api = Build.VERSION_CODES.M)
     @SuppressLint("NewApi")
     @Override
@@ -101,6 +96,7 @@ public class Mesas extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerMesas);
         floatingActionButton = findViewById(R.id.floatingG);
         carShop = findViewById(R.id.imgCarrinho);
+        DB = new DbOpenhelper(this);
         setSupportActionBar(toolbar);
         ActionBar t = getSupportActionBar();
         t.setTitle("Mesa");
@@ -217,7 +213,7 @@ public class Mesas extends AppCompatActivity {
                             Runnable runnable = new Runnable() {
                                 @Override
                                 public void run() {
-                                    GraphqlResponse resposta = cadastrarMesa.run(edtMesas.getText().toString(),Database.getToken(getApplicationContext()),deviceID);
+                                    GraphqlResponse resposta = cadastrarMesa.run(edtMesas.getText().toString(), DB.getToken(),deviceID);
                                     if(resposta instanceof Logico){
                                         Logico response = (Logico)resposta;
                                         if(response.getValor()){
@@ -298,12 +294,13 @@ public class Mesas extends AppCompatActivity {
                 //logout  é realizado aqui
                 final GraphqlClient graphqlClient = new GraphqlClient();
                 final String deviceID = new DeviceInfo().getDeviceID(getApplicationContext());
-                GraphqlResponse response = new Logout(graphqlClient).run(Database.getToken(getApplicationContext()),deviceID);
+                GraphqlResponse response = new Logout(graphqlClient).run(DB.getToken(),deviceID);
                 if(response instanceof GraphqlError){
                     GraphqlError error = (GraphqlError)response;
                     Toast.makeText(getApplicationContext(), error.getMessage() + ". " + error.getCategory() + "[" + error.getCode() + "]", Toast.LENGTH_SHORT).show();
                 }
-                Database.setToken(getApplicationContext(),"");
+                //Memoria.setToken(getApplicationContext(),"");
+                DB.deleteLogin();
                 Intent m = new Intent(getApplicationContext(),MainActivity.class);
                 m.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 close.dismiss();
@@ -347,12 +344,13 @@ public class Mesas extends AppCompatActivity {
                         //logout  é realizado aqui
                         final GraphqlClient graphqlClient = new GraphqlClient();
                         final String deviceID = new DeviceInfo().getDeviceID(getApplicationContext());
-                        GraphqlResponse response = new Logout(graphqlClient).run(Database.getToken(getApplicationContext()),deviceID);
+                        GraphqlResponse response = new Logout(graphqlClient).run(DB.getToken(),deviceID);
                         if(response instanceof GraphqlError){
                             GraphqlError error = (GraphqlError)response;
                             Toast.makeText(getApplicationContext(), error.getMessage() + ". " + error.getCategory() + "[" + error.getCode() + "]", Toast.LENGTH_SHORT).show();
                         }
-                        Database.setToken(getApplicationContext(),"");
+                        //Memoria.setToken(getApplicationContext(),"");
+                        DB.deleteLogin();
                         Intent m = new Intent(getApplicationContext(),MainActivity.class);
                         m.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         close.dismiss();

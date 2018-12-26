@@ -20,6 +20,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import br.com.viphost.kardenapp.CONTROLLER.DAO.DbOpenhelper;
 import br.com.viphost.kardenapp.CONTROLLER.DeviceInfo;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlClient;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlError;
@@ -28,7 +29,7 @@ import br.com.viphost.kardenapp.CONTROLLER.connections.mesas.AtualizarPermissao;
 import br.com.viphost.kardenapp.CONTROLLER.tipos.ListaProdutos;
 import br.com.viphost.kardenapp.CONTROLLER.queries.ListarProdutos;
 import br.com.viphost.kardenapp.CONTROLLER.utils.Balao;
-import br.com.viphost.kardenapp.CONTROLLER.utils.Database;
+import br.com.viphost.kardenapp.CONTROLLER.utils.Memoria;
 import br.com.viphost.kardenapp.MODEL.Produto;
 import br.com.viphost.kardenapp.R;
 import br.com.viphost.kardenapp.VIEW.Adapter.AdapterSingleCategoria;
@@ -64,6 +65,8 @@ public class PageCategoria extends AppCompatActivity {
     private String[] categorias = {"Categorias"};
     private String nomeCategoria;
     private androidx.appcompat.app.AlertDialog alertCadastroProduto;
+
+    private DbOpenhelper DB;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +77,7 @@ public class PageCategoria extends AppCompatActivity {
         carShop = findViewById(R.id.carShopProdutoSingle);
         recyclerView = findViewById(R.id.recyclerPageCategoria);
         menu = findViewById(R.id.menuProdutoSingle);
+        DB = new DbOpenhelper(this);
         bottomSheetDialog = new BottomSheetDialog(PageCategoria.this);
         View modal = getLayoutInflater().inflate(R.layout.bottom_behavior,null);
         bottomSheetDialog.setContentView(modal);
@@ -186,11 +190,11 @@ public class PageCategoria extends AppCompatActivity {
         final String deviceID = new DeviceInfo().getDeviceID(getApplicationContext());
         final GraphqlClient graphqlClient = new GraphqlClient();
         final ListarProdutos listarProdutos = new ListarProdutos(graphqlClient);
-        final int idCategoria = Database.getIdFromCategoria(info);
+        final int idCategoria = Memoria.getIdFromCategoria(info);
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                GraphqlResponse resposta = listarProdutos.run(idCategoria,Database.getToken(getApplicationContext()),deviceID);
+                GraphqlResponse resposta = listarProdutos.run(idCategoria, DB.getToken(),deviceID);
                 if(resposta instanceof ListaProdutos){
                     ListaProdutos array =(ListaProdutos) resposta;
                     int count =0;

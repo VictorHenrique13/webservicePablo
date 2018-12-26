@@ -1,17 +1,13 @@
 package br.com.viphost.kardenapp.CONTROLLER.utils;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.widget.AdapterViewAnimator;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import androidx.recyclerview.widget.RecyclerView;
+import br.com.viphost.kardenapp.CONTROLLER.DAO.DbOpenhelper;
 import br.com.viphost.kardenapp.CONTROLLER.DeviceInfo;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlClient;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlError;
@@ -26,6 +22,7 @@ public class AtualizarMesas {
     private ArrayList<String> ms;
     private Activity activity;
     private AdapterNoIcon adp;
+    private DbOpenhelper DB;
     Timer timer;
 
     public AtualizarMesas(Activity activity, ArrayList<String> ms, RecyclerView recyclerView, AdapterNoIcon adp){
@@ -33,6 +30,7 @@ public class AtualizarMesas {
         this.ms=ms;
         this.activity=activity;
         this.adp=adp;
+        DB = new DbOpenhelper(activity);
         timer = new Timer();
     }
 
@@ -43,7 +41,7 @@ public class AtualizarMesas {
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
-                GraphqlResponse resposta = listarMesas.run(Database.getToken(AtualizarMesas.this.activity.getApplicationContext()),deviceID);
+                GraphqlResponse resposta = listarMesas.run(DB.getToken(),deviceID);
                 if(resposta instanceof IntArray){
                     IntArray array =(IntArray) resposta;
                     int count =0;
@@ -108,7 +106,7 @@ public class AtualizarMesas {
         final GraphqlClient graphqlClient = new GraphqlClient();
         final ListarMesas listarMesas = new ListarMesas(graphqlClient);
         final String deviceID = new DeviceInfo().getDeviceID(this.activity.getApplicationContext());
-        GraphqlResponse resposta = listarMesas.run(Database.getToken(AtualizarMesas.this.activity.getApplicationContext()),deviceID);
+        GraphqlResponse resposta = listarMesas.run(DB.getToken(),deviceID);
         ArrayList<String> retorno = new ArrayList<String>();
         if(resposta instanceof IntArray){
             IntArray array =(IntArray) resposta;

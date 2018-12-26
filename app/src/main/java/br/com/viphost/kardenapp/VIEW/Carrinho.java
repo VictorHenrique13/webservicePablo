@@ -22,15 +22,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import br.com.viphost.kardenapp.CONTROLLER.DAO.DbOpenhelper;
 import br.com.viphost.kardenapp.CONTROLLER.DeviceInfo;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlClient;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlError;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlResponse;
 import br.com.viphost.kardenapp.CONTROLLER.connections.mesas.AtualizarPermissao;
 import br.com.viphost.kardenapp.CONTROLLER.mutations.AdicionarPedido;
-import br.com.viphost.kardenapp.CONTROLLER.mutations.CadastrarMesa;
 import br.com.viphost.kardenapp.CONTROLLER.utils.Balao;
-import br.com.viphost.kardenapp.CONTROLLER.utils.Database;
+import br.com.viphost.kardenapp.CONTROLLER.utils.Memoria;
 import br.com.viphost.kardenapp.MODEL.Produto;
 import br.com.viphost.kardenapp.R;
 import br.com.viphost.kardenapp.VIEW.Adapter.AdapterSingleCategoria;
@@ -56,6 +56,7 @@ public class Carrinho extends AppCompatActivity {
     private ArrayList<Produto> prods = new ArrayList<>();
     private AlertDialog confirm;
     private BottomSheetDialog bottomSheetDialog;
+    private DbOpenhelper DB;
 
 
     private TextInputLayout layNomeProdCad;
@@ -74,7 +75,7 @@ public class Carrinho extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        prods = Database.getCarrinhoMesaAtual().getProdutos();
+        prods = Memoria.getCarrinhoMesaAtual().getProdutos();
         setContentView(R.layout.activity_carrinho);
         toolbar = findViewById(R.id.toolbar);
         bottomAppBar = findViewById(R.id.bottomAppBar);
@@ -83,6 +84,7 @@ public class Carrinho extends AppCompatActivity {
         carShop = findViewById(R.id.imgCarrinho);
         menu = findViewById(R.id.menuUp);
         recyclerView =findViewById(R.id.recyclerCarrinho);
+        DB = new DbOpenhelper(this);
 
         new AtualizarPermissao(this).run(true);
         setSupportActionBar(toolbar);
@@ -201,7 +203,7 @@ public class Carrinho extends AppCompatActivity {
                 Runnable runnable = new Runnable() {
                     @Override
                     public void run() {
-                        GraphqlResponse resposta = adicionarPedido.run(Database.getAtualComanda(Database.getMesaAtual()),itens,Database.getToken(getApplicationContext()),deviceID);
+                        GraphqlResponse resposta = adicionarPedido.run(Memoria.getAtualComanda(Memoria.getMesaAtual()),itens,DB.getToken(),deviceID);
                         if(resposta instanceof br.com.viphost.kardenapp.CONTROLLER.tipos.Logico){
                             br.com.viphost.kardenapp.CONTROLLER.tipos.Logico response = (br.com.viphost.kardenapp.CONTROLLER.tipos.Logico)resposta;
                             if(response.getValor()){
@@ -210,9 +212,9 @@ public class Carrinho extends AppCompatActivity {
                                 m.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(m);
                                 Carrinho.this.finish();
-                                Database.getCarrinho(Database.getMesaAtual()).getProdutos().clear();
-                                Database.apagarCarrinhoMesa(Database.getMesaAtual());
-                                Database.setMesaAtual("-1");
+                                Memoria.getCarrinho(Memoria.getMesaAtual()).getProdutos().clear();
+                                Memoria.apagarCarrinhoMesa(Memoria.getMesaAtual());
+                                Memoria.setMesaAtual("-1");
                             }else{
                                 new Balao(Carrinho.this,"Nao foi possivel realizar pedido",Toast.LENGTH_LONG).show();
                             }

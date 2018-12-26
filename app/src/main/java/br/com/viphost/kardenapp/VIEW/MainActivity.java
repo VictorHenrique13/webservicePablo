@@ -10,14 +10,11 @@ import android.os.Bundle;
 import android.widget.Button;
 
 import br.com.viphost.kardenapp.CONTROLLER.DAO.DbOpenhelper;
-import br.com.viphost.kardenapp.CONTROLLER.utils.Database;
 import br.com.viphost.kardenapp.R;
 import br.com.viphost.kardenapp.VIEW.Pager.ViewPagerAdp;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-
-import static br.com.viphost.kardenapp.R.layout.fragment_login;
 
 public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;

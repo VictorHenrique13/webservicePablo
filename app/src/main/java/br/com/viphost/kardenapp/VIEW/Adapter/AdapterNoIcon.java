@@ -1,22 +1,21 @@
 package br.com.viphost.kardenapp.VIEW.Adapter;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import br.com.viphost.kardenapp.CONTROLLER.DAO.DbOpenhelper;
 import br.com.viphost.kardenapp.CONTROLLER.DeviceInfo;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlClient;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlError;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlResponse;
 import br.com.viphost.kardenapp.CONTROLLER.mutations.AbrirMesa;
-import br.com.viphost.kardenapp.CONTROLLER.mutations.CadastrarCategoria;
 import br.com.viphost.kardenapp.CONTROLLER.tipos.Mesa;
 import br.com.viphost.kardenapp.CONTROLLER.utils.Balao;
-import br.com.viphost.kardenapp.CONTROLLER.utils.Database;
+import br.com.viphost.kardenapp.CONTROLLER.utils.Memoria;
 import br.com.viphost.kardenapp.R;
 import br.com.viphost.kardenapp.VIEW.Categoria;
 import br.com.viphost.kardenapp.VIEW.Holder.ViewH;
@@ -29,10 +28,12 @@ import androidx.recyclerview.widget.RecyclerView;
 public class AdapterNoIcon extends RecyclerView.Adapter<ViewH> {
     private /*Context*/Activity context;
     private ArrayList<String> mesa;
+    private DbOpenhelper DB;
 
     public AdapterNoIcon(/*Context*/Activity context, ArrayList<String> mesa) {
         this.context = context;
         this.mesa = mesa;
+        DB = new DbOpenhelper(context);
     }
 
     @NonNull
@@ -50,27 +51,27 @@ public class AdapterNoIcon extends RecyclerView.Adapter<ViewH> {
             @Override
             public void onClick(View v) {
                 //CONEXAO DE ABRIR MESA//////////////////////////////////////////////
-                Database.setMesaAtual(mesa_str);
+                Memoria.setMesaAtual(mesa_str);
                 final String deviceID = new DeviceInfo().getDeviceID(context);
                 final GraphqlClient graphqlClient = new GraphqlClient();
                 final AbrirMesa abrirMesa = new AbrirMesa(graphqlClient);
                 Runnable runnable = new Runnable() {
                     @Override
                     public void run() {
-                        GraphqlResponse resposta = abrirMesa.run(Database.getToken(context), deviceID,mesa_str);
+                        GraphqlResponse resposta = abrirMesa.run(DB.getToken(), deviceID,mesa_str);
                         if(resposta instanceof Mesa){
                             Mesa mesa_obj = ((Mesa) resposta);
-                            Database.setAtualComanda(mesa_str,mesa_obj.getComanda());
+                            Memoria.setAtualComanda(mesa_str,mesa_obj.getComanda());
                             if(mesa_obj.getJaAberta()){
                                 new Balao(context,"Esta mesa ja estava aberta",Toast.LENGTH_SHORT).show();
                             }
                             new Balao(context,"Comanda: "+mesa_obj.getComanda(),Toast.LENGTH_LONG).show();
                         }else if(resposta instanceof GraphqlError){
-                            Database.setAtualComanda(mesa_str,-1);
+                            Memoria.setAtualComanda(mesa_str,-1);
                             final GraphqlError error = (GraphqlError) resposta;
                             new Balao(context, error.getMessage() + ". " + error.getCategory() + "[" + error.getCode() + "]", Toast.LENGTH_LONG).show();
                         } else{
-                            Database.setAtualComanda(mesa_str,-1);
+                            Memoria.setAtualComanda(mesa_str,-1);
                             new Balao(context,"Erro desconhecido",Toast.LENGTH_LONG).show();
                         }
                     }

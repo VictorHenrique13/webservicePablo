@@ -19,9 +19,7 @@ import br.com.viphost.kardenapp.CONTROLLER.DeviceInfo;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlClient;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlError;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlResponse;
-import br.com.viphost.kardenapp.CONTROLLER.mutations.RegistrarUsuario;
 import br.com.viphost.kardenapp.CONTROLLER.utils.Balao;
-import br.com.viphost.kardenapp.CONTROLLER.utils.Database;
 import br.com.viphost.kardenapp.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -77,10 +75,10 @@ public class Login extends Fragment {
                           GraphqlResponse resposta = loginMutation.run(email,senha,deviceID);
                           if(resposta instanceof br.com.viphost.kardenapp.CONTROLLER.tipos.Login){
                               br.com.viphost.kardenapp.CONTROLLER.tipos.Login login =(br.com.viphost.kardenapp.CONTROLLER.tipos.Login) resposta;
-                              //Database.setToken(getContext(), login.getToken());
-                              //Database.setPermission(getContext(),login.getPermissao());
+                              //Memoria.setToken(getContext(), login.getToken());
+                              //Memoria.setPermission(getContext(),login.getPermissao());
                               new DbOpenhelper(getActivity()).setLogin(login.getToken(),login.getPermissao());
-                              new Balao(getActivity(),"Login Realizado",Toast.LENGTH_LONG).show();
+                              new Balao(getActivity(),"Login Realizado",Toast.LENGTH_SHORT).show();
                               Intent m = new Intent(getActivity(),Mesas.class);
                               m.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                               startActivity(m);

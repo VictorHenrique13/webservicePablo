@@ -21,7 +21,6 @@ import br.com.viphost.kardenapp.CONTROLLER.GraphqlResponse;
 import br.com.viphost.kardenapp.CONTROLLER.mutations.RegistrarUsuario;
 import br.com.viphost.kardenapp.CONTROLLER.tipos.Login;
 import br.com.viphost.kardenapp.CONTROLLER.utils.Balao;
-import br.com.viphost.kardenapp.CONTROLLER.utils.Database;
 import br.com.viphost.kardenapp.R;
 
 import com.google.android.material.textfield.TextInputEditText;
@@ -88,10 +87,10 @@ public class Cadastro extends Fragment {
                             GraphqlResponse resposta = registro.run(nome,telefone,email,email,senha,deviceID);
                             if(resposta instanceof Login){
                                 Login login =(Login) resposta;
-                                //Database.setToken(getContext(), login.getToken());
-                                //Database.setPermission(getContext(),login.getPermissao());
+                                //Memoria.setToken(getContext(), login.getToken());
+                                //Memoria.setPermission(getContext(),login.getPermissao());
                                 new DbOpenhelper(getActivity()).setLogin(login.getToken(),login.getPermissao());
-                                new Balao(getActivity(),"Cadastro Realizado",Toast.LENGTH_LONG).show();
+                                new Balao(getActivity(),"Cadastro Realizado",Toast.LENGTH_SHORT).show();
                                 Intent m = new Intent(getActivity(),Mesas.class);
                                 m.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(m);

@@ -14,7 +14,7 @@ import java.util.Scanner;
 import br.com.viphost.kardenapp.MODEL.ItensPedido;
 import br.com.viphost.kardenapp.MODEL.Produto;
 
-public class Database {
+public class Memoria {
     private static String mesaAtual = "-1";
     private static ArrayList<String> categorias_nomes = null;
     private static ArrayList<Integer> categorias_ids = null;
@@ -144,92 +144,4 @@ public class Database {
         return categorias_ids.get(index);
     }
 
-    public static String getToken(Context context){
-        String TOKEN = "token";
-        FileInputStream fis = null;
-        try {
-            fis = context.openFileInput(TOKEN);
-            Scanner scan = new Scanner(fis);
-            if(scan.hasNext()){
-                return scan.next();
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-    public static int getPermission(Context context){
-        String TOKEN = "permissao";
-        FileInputStream fis = null;
-        try {
-            fis = context.openFileInput(TOKEN);
-            Scanner scan = new Scanner(fis);
-            if(scan.hasNextInt()){
-                return scan.nextInt();
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (NumberFormatException e){
-            e.printStackTrace();
-        }
-        return -1;
-    }
-    public static void setToken(Context context, String token){
-        String TOKEN = "token";
-
-        FileOutputStream fos = null;
-        try {
-            fos = context.openFileOutput(TOKEN, Context.MODE_PRIVATE);
-            fos.write(token.getBytes());
-            fos.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    public static void setPermission(Context context, int permission){
-        String PERMISSAO = "permissao";
-
-        FileOutputStream fos = null;
-        try {
-            fos = context.openFileOutput(PERMISSAO, Context.MODE_PRIVATE);
-            fos.write((permission+"").getBytes());
-            fos.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    public static boolean tokenIsEmpty(Context context){
-        String TOKEN = "token";
-
-        FileInputStream fis = null;
-            try {
-            fis = context.openFileInput(TOKEN);
-            Scanner scan = new Scanner(fis);
-            if(scan.hasNext() && !scan.next().isEmpty()){
-                return false;
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return true;
-    }
-    public static boolean permissionIsEmpty(Context context){
-        String TOKEN = "permissao";
-
-        FileInputStream fis = null;
-        try {
-            fis = context.openFileInput(TOKEN);
-            Scanner scan = new Scanner(fis);
-            if(scan.hasNext() && !scan.next().isEmpty()){
-                return false;
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return true;
-    }
 }

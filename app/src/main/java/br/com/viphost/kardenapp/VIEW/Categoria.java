@@ -25,6 +25,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import br.com.viphost.kardenapp.CONTROLLER.DAO.DbOpenhelper;
 import br.com.viphost.kardenapp.CONTROLLER.DeviceInfo;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlClient;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlError;
@@ -34,7 +35,7 @@ import br.com.viphost.kardenapp.CONTROLLER.mutations.CadastrarCategoria;
 import br.com.viphost.kardenapp.CONTROLLER.queries.ListarCategorias;
 import br.com.viphost.kardenapp.CONTROLLER.utils.AtualizarMesas;
 import br.com.viphost.kardenapp.CONTROLLER.utils.Balao;
-import br.com.viphost.kardenapp.CONTROLLER.utils.Database;
+import br.com.viphost.kardenapp.CONTROLLER.utils.Memoria;
 import br.com.viphost.kardenapp.R;
 import br.com.viphost.kardenapp.VIEW.Adapter.AdapterWithIcon;
 import com.google.android.material.bottomappbar.BottomAppBar;
@@ -77,6 +78,7 @@ public class Categoria extends AppCompatActivity {
     private String[] categorias = {"Categorias"};
     private String nomeCategoria;
     private androidx.appcompat.app.AlertDialog alertCadastroProduto;
+    private DbOpenhelper DB;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if(AtualizarMesas.reference!=null){
@@ -91,6 +93,7 @@ public class Categoria extends AppCompatActivity {
         iconSearch = findViewById(R.id.iconSearch);
         carShop =findViewById(R.id.imgCarrinho);
         menuUp = findViewById(R.id.menuUp);
+        DB = new DbOpenhelper(this);
         setSupportActionBar(toolbar);
         ActionBar t = getSupportActionBar();
         t.setTitle("Categoria");
@@ -234,7 +237,7 @@ public class Categoria extends AppCompatActivity {
                             Runnable runnable = new Runnable() {
                                 @Override
                                 public void run() {
-                                    GraphqlResponse resposta = cadastrarMesa.run(edtCategoria.getText().toString(),Database.getToken(getApplicationContext()),deviceID);
+                                    GraphqlResponse resposta = cadastrarMesa.run(edtCategoria.getText().toString(), DB.getToken(),deviceID);
                                     if(resposta instanceof br.com.viphost.kardenapp.CONTROLLER.tipos.Inteiro){
                                         br.com.viphost.kardenapp.CONTROLLER.tipos.Inteiro response = (br.com.viphost.kardenapp.CONTROLLER.tipos.Inteiro)resposta;
                                         f.add(edtCategoria.getText().toString());
@@ -277,7 +280,7 @@ public class Categoria extends AppCompatActivity {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                GraphqlResponse resposta = listarCategorias.run(Database.getToken(getApplicationContext()),deviceID);
+                GraphqlResponse resposta = listarCategorias.run(DB.getToken(),deviceID);
                 if(resposta instanceof ListaCategorias){
                     ListaCategorias array =(ListaCategorias) resposta;
                     int count =0;
@@ -341,7 +344,7 @@ public class Categoria extends AppCompatActivity {
 
 
         ///////////GAMBIARRA/////////
-        Database.setCategorias(f,f_ids);
+        Memoria.setCategorias(f,f_ids);
         ////////GAMBIARRA////////////
     }
 
