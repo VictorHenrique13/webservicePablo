@@ -25,16 +25,20 @@ public class MainActivity extends AppCompatActivity {
     private TextInputEditText email;
     private AlertDialog close;
     private Button btnGo;
+    private DbOpenhelper DB;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String token = new DbOpenhelper(this).getToken();
+        DB = new DbOpenhelper(this);
+        String token = DB.getToken();
         if(!token.isEmpty()&&token!="vazio"){//Auto Ir Mesas Activity se ja logado
             Intent m = new Intent(getApplicationContext(),Mesas.class);
             startActivity(m);
             finish();
             return;
-    }
+        }else{
+            DB.recreateAllTables();
+        }
         setContentView(R.layout.activity_main);
 
         tabLayout = findViewById(R.id.containerTabs);

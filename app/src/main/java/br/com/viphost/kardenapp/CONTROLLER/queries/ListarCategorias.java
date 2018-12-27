@@ -24,7 +24,8 @@ public class ListarCategorias extends Query {
                 "query{" +
                     "listar(token:\"" + token + "\",dispositivo:\"" + dispositivo + "\",id_dispositivo: \"" + id_dispositivo + "\"){" +
                         "categorias{" +
-                            "id,nome" +
+                            //"id,nome" +
+                            "nome" +
                         "}" +
                     "}" +
                 "}");

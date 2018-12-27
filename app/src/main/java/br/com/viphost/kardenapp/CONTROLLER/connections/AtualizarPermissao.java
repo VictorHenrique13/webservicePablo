@@ -1,4 +1,4 @@
-package br.com.viphost.kardenapp.CONTROLLER.connections.mesas;
+package br.com.viphost.kardenapp.CONTROLLER.connections;
 
 import android.app.Activity;
 import android.app.ProgressDialog;

@@ -27,8 +27,8 @@ public class DbOpenhelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE if not exists categoria(id INTEGER primary key autoincrement,nomeCategoria text,img varchar)");
         Log.i(TAG,"Categoria criada");
-        db.execSQL("create table if not exists mesas(id integer primary key autoincrement, numMesa text not null)");
-        db.execSQL("create table if not exists produtos(id integer primary key autoincrement,nome text,valor double, quantidade INTEGER,nomeCategoria text)");
+        db.execSQL("create table if not exists mesa(id integer primary key autoincrement, numMesa text not null)");
+        db.execSQL("create table if not exists produto(id integer primary key,nome text,valor double, nomeCategoria text)");
         db.execSQL("CREATE TABLE if not exists login(id INTEGER primary key autoincrement,token text,permissao INTEGER)");
     }
 
@@ -56,11 +56,8 @@ public class DbOpenhelper extends SQLiteOpenHelper {
     }
     public void deleteLogin(){
         db = getReadableDatabase();
-        Cursor c = db.rawQuery("select * from login",null);
         try {
-            if(c.moveToFirst()){
-                db.delete("login",null,null);
-            }
+            db.delete("login",null,null);
         }finally {
             db.close();
         }
@@ -81,32 +78,31 @@ public class DbOpenhelper extends SQLiteOpenHelper {
             db.close();
         }
     }
-    public void salvarMesa(int mesa){
+    public void insertMesa(String mesa){
             db = getReadableDatabase();
         try {
             ContentValues values = new ContentValues();
             values.put("numMesa",mesa);
-            db.insert("mesas","",values);
+            db.insert("mesa","",values);
 
         }finally {
             db.close();
         }
     }
-    public void salvarProduto(Produto prod){
+    public void insertProduto(Produto prod){
         db = getReadableDatabase();
         try{
             ContentValues values = new ContentValues();
             values.put("id",prod.getId());
             values.put("nome",prod.getNome());
+            values.put("valor",prod.getDoublePreco());
             values.put("nomeCategoria",prod.getNameCategoria());
-            values.put("valor",prod.getPreco());
-            values.put("quantidade",prod.getIntQuantidade());
-            db.insert("produtos","",values);
+            db.insert("produto","",values);
         }finally {
             db.close();
         }
     }
-    public void salvarCategoria(String nomeCategoria){
+    public void insertCategoria(String nomeCategoria){
         db = getReadableDatabase();
         try{
             ContentValues values = new ContentValues();
@@ -154,7 +150,7 @@ public class DbOpenhelper extends SQLiteOpenHelper {
     public ArrayList<String> getListaMesas(){
         db = getReadableDatabase();
          ArrayList<String> mesas = new ArrayList<>();
-         Cursor c = db.rawQuery("select * from mesas",null);
+         Cursor c = db.rawQuery("select * from mesa",null);
          if(c.moveToFirst()){
              do{
                 mesas.add(c.getString(c.getColumnIndex("numMesa")));
@@ -163,21 +159,145 @@ public class DbOpenhelper extends SQLiteOpenHelper {
          db.close();
          return mesas;
     }
-    public ArrayList<Produto> getListaProdutos(){
+    public ArrayList<Produto> getListaProdutos(String categoriaNome){
         db = getReadableDatabase();
         ArrayList<Produto> produtos = new ArrayList<>();
-        Cursor c = db.rawQuery("select * from produtos",null);
+        //Cursor c = db.rawQuery("select * from produto where nomeCategoria = '"+categoriaNome+"'",null);
+        Cursor c = db.rawQuery("select * from produto",null);
         if(c.moveToFirst()){
             do{
                 int id = c.getInt(c.getColumnIndex("id"));
                 String nome = c.getString(c.getColumnIndex("nome"));
-                int quantidade = c.getInt(c.getColumnIndex("quantidade"));
-                float valor = c.getFloat(c.getColumnIndex("valor"));
+                double valor = c.getDouble(c.getColumnIndex("valor"));
                 String categoria = c.getString(c.getColumnIndex("nomeCategoria"));
-                Produto p = new Produto(id,nome,quantidade,valor,categoria);
+                Produto p = new Produto(id,nome,0,valor,categoria);
                 produtos.add(p);
             }while (c.moveToNext());
         }
         return produtos;
+    }
+
+    public void updateMesa(String oldMesa, String newMesa){
+        db = getReadableDatabase();
+        Cursor c = db.rawQuery("select * from mesa where numMesa = '"+oldMesa+"'",null);
+        try {
+            ContentValues values = new ContentValues();
+            values.put("numMesa",newMesa);
+            if(c.moveToFirst()){
+                int id = c.getInt(c.getColumnIndex("id"));
+                db.update("mesa",values,"id="+id, null);
+            }else{
+                db.insert("mesa","",values);
+            }
+        }finally {
+            db.close();
+        }
+    }
+    public void updateCategoria(String oldCategoria, String newCategoria){
+        db = getReadableDatabase();
+        Cursor c = db.rawQuery("select * from categoria where nomeCategoria = '"+oldCategoria+"'",null);
+        try {
+            ContentValues values = new ContentValues();
+            values.put("nomeCategoria",newCategoria);
+            if(c.moveToFirst()){
+                int id = c.getInt(c.getColumnIndex("id"));
+                db.update("categoria",values,"id="+id, null);
+            }else{
+                db.insert("categoria","",values);
+            }
+        }finally {
+            db.close();
+        }
+    }
+    public void updateProduto(Produto oldProduto, Produto newProduto){
+        db = getReadableDatabase();
+        Cursor c = db.rawQuery("select * from produto where id = '"+oldProduto.getId()+"'",null);
+        try {
+            ContentValues values = new ContentValues();
+            values.put("id",newProduto.getId());
+            values.put("nome",newProduto.getNome());
+            values.put("valor",newProduto.getDoublePreco());
+            values.put("nomeCategoria",newProduto.getNameCategoria());
+            if(c.moveToFirst()){
+                int id = c.getInt(c.getColumnIndex("id"));
+                db.update("produto",values,"id="+id, null);
+            }else{
+                db.insert("produto","",values);
+            }
+        }finally {
+            db.close();
+        }
+    }
+    public void removeMesa(String numMesa){
+        db = getReadableDatabase();
+        Cursor c = db.rawQuery("select * from mesa where numMesa = '"+numMesa+"'",null);
+        try {
+            if(c.moveToFirst()){
+                int id = c.getInt(c.getColumnIndex("id"));
+                db.delete("mesa","id="+id,null);
+            }
+        }finally {
+            db.close();
+        }
+    }
+    public void removeCategoria(String nomeCategoria){
+        db = getReadableDatabase();
+        Cursor c = db.rawQuery("select * from categoria where nomeCategoria = '"+nomeCategoria+"'",null);
+        try {
+            if(c.moveToFirst()){
+                int id = c.getInt(c.getColumnIndex("id"));
+                db.delete("categoria","id="+id,null);
+            }
+        }finally {
+            db.close();
+        }
+    }
+    public void removeProduto(int idProduto){
+        db = getReadableDatabase();
+        Cursor c = db.rawQuery("select * from produto where id = '"+idProduto+"'",null);
+        try {
+            if(c.moveToFirst()){
+                int id = c.getInt(c.getColumnIndex("id"));
+                db.delete("produto","id="+id,null);
+            }
+        }finally {
+            db.close();
+        }
+    }
+    public void removeAllProdutoFromCategoria(String categoriaNome){
+        db = getReadableDatabase();
+        try {
+            db.delete("produto","nomeCategoria='"+categoriaNome+"'",null);
+        }finally {
+            db.close();
+        }
+    }
+    public void removeAllCategoria(){
+        db = getReadableDatabase();
+        try {
+            db.delete("categoria",null,null);
+        }finally {
+            db.close();
+        }
+    }
+    public void removeAllMesa(){
+        db = getReadableDatabase();
+        try {
+            db.delete("mesa",null,null);
+        }finally {
+            db.close();
+        }
+    }
+    public void recreateAllTables(){
+        db = getReadableDatabase();
+        try {
+            db.execSQL("DROP TABLE IF EXISTS login");
+            db.execSQL("DROP TABLE IF EXISTS mesa");
+            db.execSQL("DROP TABLE IF EXISTS categoria");
+            db.execSQL("DROP TABLE IF EXISTS produto");
+            onCreate(db);
+        }finally {
+            db.close();
+        }
     }
 }

@@ -1,12 +1,15 @@
 package br.com.viphost.kardenapp.VIEW.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import br.com.viphost.kardenapp.CONTROLLER.utils.Balao;
 import br.com.viphost.kardenapp.R;
 
 import br.com.viphost.kardenapp.VIEW.Holder.ViewH;
@@ -18,11 +21,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class AdapterWithIcon extends RecyclerView.Adapter<ViewH> {
-    private Context context;
+    private Activity context;
     private ArrayList<String> catTitle;
     private ArrayList<Integer> img;
 
-    public AdapterWithIcon(Context context, ArrayList<String> title) {
+    public AdapterWithIcon(Activity context, ArrayList<String> title) {
         this.context = context;
         this.catTitle = title;
 

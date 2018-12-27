@@ -25,7 +25,8 @@ import br.com.viphost.kardenapp.CONTROLLER.DeviceInfo;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlClient;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlError;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlResponse;
-import br.com.viphost.kardenapp.CONTROLLER.connections.mesas.AtualizarPermissao;
+import br.com.viphost.kardenapp.CONTROLLER.connections.AtualizarPermissao;
+import br.com.viphost.kardenapp.CONTROLLER.connections.pagecategoria.AtualizarProdutos;
 import br.com.viphost.kardenapp.CONTROLLER.tipos.ListaProdutos;
 import br.com.viphost.kardenapp.CONTROLLER.queries.ListarProdutos;
 import br.com.viphost.kardenapp.CONTROLLER.utils.Balao;
@@ -187,74 +188,9 @@ public class PageCategoria extends AppCompatActivity {
         recyclerView.setAdapter(adp);
 
         //Puxar Todas os Produtos//////////////////////////////////////////////////////////////////////////////////////
-        final String deviceID = new DeviceInfo().getDeviceID(getApplicationContext());
-        final GraphqlClient graphqlClient = new GraphqlClient();
-        final ListarProdutos listarProdutos = new ListarProdutos(graphqlClient);
-        final int idCategoria = Memoria.getIdFromCategoria(info);
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                GraphqlResponse resposta = listarProdutos.run(idCategoria, DB.getToken(),deviceID);
-                if(resposta instanceof ListaProdutos){
-                    ListaProdutos array =(ListaProdutos) resposta;
-                    int count =0;
-                    int tamanho = prod.size();
-                    ArrayList<Produto> toAdd = new ArrayList<>();
-                    while(array.hasNext()){
-                        br.com.viphost.kardenapp.CONTROLLER.tipos.Produto next = array.getNext();
-                        if(count<tamanho){
-                            if(prod.get(count).getId()!=next.getId()){
-                                int quantidade = 0;///VERIFICAR SE EXISTE QUANTIDADE DESSE ITEM NO CARRINHO
-                                Produto novo_produto = new Produto(next.getId(),next.getNome(),quantidade,next.getValor(),info);
-                                prod.set(count,novo_produto);
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        adp.notifyDataSetChanged();
-                                    }
-                                });
-                            }
-                        }else{
-                            int quantidade = 0;///VERIFICAR SE EXISTE QUANTIDADE DESSE ITEM NO CARRINHO
-                            Produto novo_produto = new Produto(next.getId(),next.getNome(),quantidade,next.getValor());
-                            toAdd.add(novo_produto);
-                        }
-                        count++;
-                    }
-                    while(count<tamanho){
-                        prod.remove(count);
-                        final int finalCount = count;
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                recyclerView.removeViewAt(finalCount);
-                                adp.notifyItemRemoved(finalCount);
-                                adp.notifyItemRangeChanged(finalCount, prod.size());
-                            }
-                        });
-                        count++;
-                    }
-                    if(toAdd.size()>0){
-                        prod.addAll(tamanho, toAdd);
-                        final int finalIndex = tamanho;
-                        final int finalSize = toAdd.size();
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                adp.notifyItemRangeInserted(finalIndex, finalSize);
-                            }
-                        });
-                    }
-                }else if(resposta instanceof GraphqlError){
-                    final GraphqlError error = (GraphqlError) resposta;
-                    new Balao(PageCategoria.this, error.getMessage() + ". " + error.getCategory() + "[" + error.getCode() + "]", Toast.LENGTH_LONG).show();
-                } else{
-                    new Balao(PageCategoria.this,"Erro desconhecido",Toast.LENGTH_LONG).show();
-                }
-            }
-        };
-        new Thread(runnable).start();
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //final int idCategoria = Memoria.getIdFromCategoria(info);
+        new AtualizarProdutos(this,info,prod,recyclerView,adp).run();
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     }
 

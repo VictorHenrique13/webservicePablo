@@ -27,7 +27,7 @@ import br.com.viphost.kardenapp.CONTROLLER.DeviceInfo;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlClient;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlError;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlResponse;
-import br.com.viphost.kardenapp.CONTROLLER.connections.mesas.AtualizarPermissao;
+import br.com.viphost.kardenapp.CONTROLLER.connections.AtualizarPermissao;
 import br.com.viphost.kardenapp.CONTROLLER.mutations.AdicionarPedido;
 import br.com.viphost.kardenapp.CONTROLLER.utils.Balao;
 import br.com.viphost.kardenapp.CONTROLLER.utils.Memoria;
@@ -42,8 +42,6 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
-
-import static br.com.viphost.kardenapp.R.drawable.ic_check_black_24dp;
 
 public class Carrinho extends AppCompatActivity {
     private Toolbar toolbar;
@@ -88,7 +86,7 @@ public class Carrinho extends AppCompatActivity {
         new AtualizarPermissao(this).run(true);
         setSupportActionBar(toolbar);
         ActionBar t = getSupportActionBar();
-        t.setTitle("Carrinho");
+        t.setTitle("Carrinho (Mesa: "+Memoria.getMesaAtual()+")");
         t.setDisplayHomeAsUpEnabled(true);
         final AdapterSingleCategoria adp = new AdapterSingleCategoria(Carrinho.this,prods);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(Carrinho.this);

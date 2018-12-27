@@ -3,17 +3,11 @@ package br.com.viphost.kardenapp.MODEL;
 public class Produto {
     private int id;
     private String nome;
-    private String nameCategoria;
     private int quantidade;
-    private  Float preco;
+    private  double preco;
+    private String nameCategoria;
 
-    public Produto(Integer id, String nome, int quantidade, Float preco){
-        this.id=id;
-        this.nome=nome;
-        this.quantidade=quantidade;
-        this.preco=preco;
-    }
-    public Produto(int id, String nome, int quantidade, Float preco,String nameCategoria){
+    public Produto(int id, String nome, int quantidade, double preco,String nameCategoria){
         this.id=id;
         this.nome=nome;
         this.quantidade=quantidade;
@@ -59,7 +53,7 @@ public class Produto {
     public String getPreco() {
         return String.format("R$ %.2f", preco);
     }
-    public Float getFloatPreco() {
+    public double getDoublePreco() {
         return preco;
     }
 

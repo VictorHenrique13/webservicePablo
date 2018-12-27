@@ -31,11 +31,12 @@ import br.com.viphost.kardenapp.CONTROLLER.DeviceInfo;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlClient;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlError;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlResponse;
-import br.com.viphost.kardenapp.CONTROLLER.connections.mesas.AtualizarPermissao;
+import br.com.viphost.kardenapp.CONTROLLER.connections.AtualizarPermissao;
+import br.com.viphost.kardenapp.CONTROLLER.connections.categoria.AtualizarCategorias;
 import br.com.viphost.kardenapp.CONTROLLER.tipos.ListaCategorias;
 import br.com.viphost.kardenapp.CONTROLLER.mutations.CadastrarCategoria;
 import br.com.viphost.kardenapp.CONTROLLER.queries.ListarCategorias;
-import br.com.viphost.kardenapp.CONTROLLER.utils.AtualizarMesas;
+import br.com.viphost.kardenapp.CONTROLLER.connections.mesas.AtualizarMesas;
 import br.com.viphost.kardenapp.CONTROLLER.utils.Balao;
 import br.com.viphost.kardenapp.CONTROLLER.utils.BinaryTool;
 import br.com.viphost.kardenapp.CONTROLLER.utils.Memoria;
@@ -288,74 +289,9 @@ public class Categoria extends AppCompatActivity {
                 categoriaD.show();
             }
         });
-        //Puxar Todas as categorias//////////////////////////////////////////////////////////////////////////////////////
-        final String deviceID = new DeviceInfo().getDeviceID(getApplicationContext());
-        final GraphqlClient graphqlClient = new GraphqlClient();
-        final ListarCategorias listarCategorias = new ListarCategorias(graphqlClient);
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                GraphqlResponse resposta = listarCategorias.run(DB.getToken(),deviceID);
-                if(resposta instanceof ListaCategorias){
-                    ListaCategorias array =(ListaCategorias) resposta;
-                    int count =0;
-                    int tamanho = f.size();
-                    ArrayList<String> toAddStrings = new ArrayList<>();
-                    ArrayList<Integer> toAddInts = new ArrayList<>();
-                    while(array.hasNext()){
-                        br.com.viphost.kardenapp.CONTROLLER.tipos.Categoria next = array.getNext();
-                        if(count<tamanho){
-                            if(f.get(count)!=next.getNome()){
-                                f.set(count,next.getNome());
-                                f_ids.set(count,next.getId());
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        adp.notifyDataSetChanged();
-                                    }
-                                });
-                            }
-                        }else{
-                            toAddStrings.add(next.getNome());
-                            toAddInts.add(next.getId());
-                        }
-                        count++;
-                    }
-                    while(count<tamanho){
-                        f.remove(count);
-                        final int finalCount = count;
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                recyclerView.removeViewAt(finalCount);
-                                adp.notifyItemRemoved(finalCount);
-                                adp.notifyItemRangeChanged(finalCount, f.size());
-                            }
-                        });
-                        count++;
-                    }
-                    if(toAddStrings.size()>0){
-                        f.addAll(tamanho, toAddStrings);
-                        f_ids.addAll(tamanho, toAddInts);
-                        final int finalIndex = tamanho;
-                        final int finalSize = toAddStrings.size();
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                adp.notifyItemRangeInserted(finalIndex, finalSize);
-                            }
-                        });
-                    }
-                }else if(resposta instanceof GraphqlError){
-                    final GraphqlError error = (GraphqlError) resposta;
-                    new Balao(Categoria.this, error.getMessage() + ". " + error.getCategory() + "[" + error.getCode() + "]", Toast.LENGTH_LONG).show();
-                } else{
-                    new Balao(Categoria.this,"Erro desconhecido",Toast.LENGTH_LONG).show();
-                }
-            }
-        };
-        new Thread(runnable).start();
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //Puxar Todas as categorias/////////////////////////////////////////////////////////////////////////////////////
+        new AtualizarCategorias(this,f/*,f_ids*/,recyclerView,adp).run();
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
         ///////////GAMBIARRA/////////

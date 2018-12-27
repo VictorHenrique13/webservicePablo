@@ -86,11 +86,11 @@ public class Memoria {
                     return;
                 }
             }
-            Produto toAdd = new Produto(produto.getId(),produto.getNome(),produto.getIntQuantidade(),produto.getFloatPreco());
+            Produto toAdd = new Produto(produto.getId(),produto.getNome(),produto.getIntQuantidade(),produto.getDoublePreco(),produto.getNameCategoria());
             produtos.add(toAdd);
         }else{
             ArrayList<Produto> produtos = new ArrayList<>();
-            Produto toAdd = new Produto(produto.getId(),produto.getNome(),produto.getIntQuantidade(),produto.getFloatPreco());
+            Produto toAdd = new Produto(produto.getId(),produto.getNome(),produto.getIntQuantidade(),produto.getDoublePreco(),produto.getNameCategoria());
             produtos.add(toAdd);
             carrinho_mesas.put(mesa, new ItensPedido(produtos));
         }
