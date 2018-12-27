@@ -162,8 +162,8 @@ public class DbOpenhelper extends SQLiteOpenHelper {
     public ArrayList<Produto> getListaProdutos(String categoriaNome){
         db = getReadableDatabase();
         ArrayList<Produto> produtos = new ArrayList<>();
-        //Cursor c = db.rawQuery("select * from produto where nomeCategoria = '"+categoriaNome+"'",null);
-        Cursor c = db.rawQuery("select * from produto",null);
+        Cursor c = db.rawQuery("select * from produto where nomeCategoria = '"+categoriaNome+"'",null);
+        //Cursor c = db.rawQuery("select * from produto",null);
         if(c.moveToFirst()){
             do{
                 int id = c.getInt(c.getColumnIndex("id"));
