@@ -19,6 +19,7 @@ import br.com.viphost.kardenapp.CONTROLLER.DeviceInfo;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlClient;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlError;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlResponse;
+import br.com.viphost.kardenapp.CONTROLLER.connections.login.AtualizarCategorias;
 import br.com.viphost.kardenapp.CONTROLLER.utils.Balao;
 import br.com.viphost.kardenapp.R;
 import com.google.android.material.textfield.TextInputEditText;
@@ -33,6 +34,7 @@ public class Login extends Fragment {
     private TextInputEditText edtSenha;
     private TextInputEditText edtEmail;
     private AlertDialog erro;
+    private DbOpenhelper DB;
     public Login() {
 
     }
@@ -54,6 +56,7 @@ public class Login extends Fragment {
         String email = edtEmail.getText().toString();
         String senha = edtSenha.getText().toString();
         //--------------------------------------------
+        DB = new DbOpenhelper(getActivity());
 
 
         //verificação de campos - inicio
@@ -77,8 +80,10 @@ public class Login extends Fragment {
                               br.com.viphost.kardenapp.CONTROLLER.tipos.Login login =(br.com.viphost.kardenapp.CONTROLLER.tipos.Login) resposta;
                               //Memoria.setToken(getContext(), login.getToken());
                               //Memoria.setPermission(getContext(),login.getPermissao());
-                              new DbOpenhelper(getActivity()).setLogin(login.getToken(),login.getPermissao());
+                              DB.setLogin(login.getToken(),login.getPermissao());
+                              DB.setDadosPessoais(login.getNome(),email,login.getTelefone());
                               new Balao(getActivity(),"Login Realizado",Toast.LENGTH_SHORT).show();
+                              new AtualizarCategorias(getActivity()).run(true);
                               Intent m = new Intent(getActivity(),Mesas.class);
                               m.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                               startActivity(m);

@@ -89,6 +89,7 @@ public class AtualizarMesas {
     public void start(){
         atualizarRecycler();
         final GraphqlClient graphqlClient = new GraphqlClient();
+        graphqlClient.setDebugger(false);
         final ListarMesas listarMesas = new ListarMesas(graphqlClient);
         final String deviceID = new DeviceInfo().getDeviceID(this.activity.getApplicationContext());
         TimerTask timerTask = new TimerTask() {

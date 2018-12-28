@@ -35,13 +35,16 @@ import br.com.viphost.kardenapp.CONTROLLER.GraphqlClient;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlError;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlResponse;
 import br.com.viphost.kardenapp.CONTROLLER.connections.AtualizarPermissao;
+import br.com.viphost.kardenapp.CONTROLLER.connections.menudeslizante.EnviarCadastroProduto;
 import br.com.viphost.kardenapp.CONTROLLER.mutations.CadastrarMesa;
 import br.com.viphost.kardenapp.CONTROLLER.mutations.Logout;
 import br.com.viphost.kardenapp.CONTROLLER.tipos.Logico;
 
 import br.com.viphost.kardenapp.CONTROLLER.connections.mesas.AtualizarMesas;
+import br.com.viphost.kardenapp.CONTROLLER.tipos.Mesa;
 import br.com.viphost.kardenapp.CONTROLLER.utils.Balao;
 import br.com.viphost.kardenapp.CONTROLLER.utils.BinaryTool;
+import br.com.viphost.kardenapp.MODEL.DadosPessoais;
 import br.com.viphost.kardenapp.R;
 import br.com.viphost.kardenapp.VIEW.Adapter.AdapterNoIcon;
 import com.google.android.material.bottomappbar.BottomAppBar;
@@ -68,11 +71,13 @@ public class Mesas extends AppCompatActivity {
     private AtualizarMesas atualizarMesas;
     private AdapterNoIcon adp;
     private BottomSheetDialog bottomSheetDialog;
+    private TextView NomeSliding;
+    private TextView EmailSliding;
     private Spinner spinner;
     private String nomeCategoria;
     private LinearLayout btnCadastrarProduto;
     private AlertDialog alertCadastroProduto;
-    private String[] categorias = {"Categorias","fera","loko"};
+    //private String[] categorias = {"Categorias"};//Preciso recriar dentro do ClickListener pois nao e possivel fixar um tamanho antes
     //referencias da dialog Cadasreo produto
     private TextInputLayout layNomeProdCad;
     private TextInputLayout layPrecoCad;
@@ -106,12 +111,18 @@ public class Mesas extends AppCompatActivity {
         //floatingActionButton.hide();
         //menu deslizante para cima
         bottomSheetDialog = new BottomSheetDialog(Mesas.this,R.style.BottomSheetDialog);
+
         View modal = getLayoutInflater().inflate(R.layout.bottom_behavior,null);
         bottomSheetDialog.setContentView(modal);
         menuUp = findViewById(R.id.menuUp);
+        NomeSliding = modal.findViewById(R.id.NomeSliding);
+        EmailSliding = modal.findViewById(R.id.EmailSliding);
+        DadosPessoais dadosPessoais = DB.getDadosPessoais();
+        NomeSliding.setText(dadosPessoais.getNome());
+        EmailSliding.setText(dadosPessoais.getEmail());
 
         new AtualizarPermissao(this).run(true);
-        if(BinaryTool.BitValueOfInt(DB.getPermissao(),4)==false){
+        if(BinaryTool.BitValueOfInt(DB.getPermissao(),5)==false){
             CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams)floatingActionButton.getLayoutParams();
             p.setAnchorId(View.NO_ID);
             p.width = 0;
@@ -129,11 +140,18 @@ public class Mesas extends AppCompatActivity {
         });
         //funçoes menu deslizante
         btnCadastrarProduto = modal.findViewById(R.id.cadastrarProdutoAction);
+        if(BinaryTool.BitValueOfInt(DB.getPermissao(),7)==false){
+            btnCadastrarProduto.setVisibility(View.GONE);
+        }
         btnCadastrarProduto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder b = new AlertDialog.Builder(Mesas.this);
                 View cadastroDialog = LayoutInflater.from(Mesas.this).inflate(R.layout.cadastro_produto,null);
+                ArrayList<String> categoriasList = DB.getListaCategoria();
+                String[] categorias = new String[categoriasList.size()];
+                categorias = categoriasList.toArray(categorias);
+
                 edtNomeProdCad = cadastroDialog.findViewById(R.id.edtNomeProdCad);
                 edtPrecoProdCad = cadastroDialog.findViewById(R.id.edtPrecoCad);
                 layNomeProdCad = cadastroDialog.findViewById(R.id.layNomeProdCad);
@@ -147,8 +165,9 @@ public class Mesas extends AppCompatActivity {
                 //dados para envio em formato usavel
                 //caso algum tipo de variavel esta errado so realizar troca
 
-                String nomeProdutoCadastro = edtNomeProdCad.getText().toString();
-                String precoProdutoCAdastro = edtPrecoProdCad.getText().toString();
+                //Desatualizado, vou puxar novamente dentro do click Listener, String é considerado primitivo em java entao isto nao é um ponteiro
+                //String nomeProdutoCadastro = edtNomeProdCad.getText().toString();
+                //String precoProdutoCAdastro = edtPrecoProdCad.getText().toString();
 
                 //-----------------------------------------------------------------------------
                 spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -168,16 +187,21 @@ public class Mesas extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         if(validateCadastroProd()){
-                            //conexao server aqui
-
-
-                            //-------------------------------
-                            //conexao offline aqui-------
-
-
-
-                            //-----------------------------
-
+                            String nomeProdutoCadastro = edtNomeProdCad.getText().toString();
+                            String precoProdutoCadastroStr = edtPrecoProdCad.getText().toString();
+                            double precoProdutoCadastro;
+                            try{
+                                precoProdutoCadastro = Double.parseDouble(precoProdutoCadastroStr);
+                            }catch(Exception e){
+                                new Balao(Mesas.this, "Insira um valor no formato correto Ex.: 000.00", Toast.LENGTH_SHORT);
+                                return;
+                            }
+                            //conexao server aqui--------------------//
+                            new EnviarCadastroProduto(Mesas.this,nomeProdutoCadastro,precoProdutoCadastro,nomeCategoria).run(true);
+                            //---------------------------------------//
+                            //conexao offline aqui-------------------//
+                            //? vou inserir no SQLite na classe acima//
+                            //---------------------------------------//
                             edtPrecoProdCad.setText("");
                             edtNomeProdCad.setText("");
                             edtNomeProdCad.findFocus();

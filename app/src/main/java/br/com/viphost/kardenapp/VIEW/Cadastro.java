@@ -41,6 +41,7 @@ public class Cadastro extends Fragment {
     private Button btnCadastrar;
     AlertDialog erro;
     AlertDialog erroSenha;
+    private DbOpenhelper DB;
 
 
     public Cadastro() {
@@ -67,6 +68,7 @@ public class Cadastro extends Fragment {
         String senha = edtSenhaC.getText().toString();
         btnCadastrar = v.findViewById(R.id.btnCadastrar);
         //----------------------------------------------
+        DB = new DbOpenhelper(getActivity());
         //Device ID. Necessario para todas as requisições e só consigo puxar no onCreate
         final String deviceID = new DeviceInfo().getDeviceID(getContext());
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
@@ -89,7 +91,8 @@ public class Cadastro extends Fragment {
                                 Login login =(Login) resposta;
                                 //Memoria.setToken(getContext(), login.getToken());
                                 //Memoria.setPermission(getContext(),login.getPermissao());
-                                new DbOpenhelper(getActivity()).setLogin(login.getToken(),login.getPermissao());
+                                DB.setLogin(login.getToken(),login.getPermissao());
+                                DB.setDadosPessoais(login.getNome(),email,login.getTelefone());
                                 new Balao(getActivity(),"Cadastro Realizado",Toast.LENGTH_SHORT).show();
                                 Intent m = new Intent(getActivity(),Mesas.class);
                                 m.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

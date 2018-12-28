@@ -10,6 +10,7 @@ import android.util.Log;
 import java.util.ArrayList;
 
 import androidx.annotation.Nullable;
+import br.com.viphost.kardenapp.MODEL.DadosPessoais;
 import br.com.viphost.kardenapp.MODEL.Produto;
 
 public class DbOpenhelper extends SQLiteOpenHelper {
@@ -30,11 +31,17 @@ public class DbOpenhelper extends SQLiteOpenHelper {
         db.execSQL("create table if not exists mesa(id integer primary key autoincrement, numMesa text not null)");
         db.execSQL("create table if not exists produto(id integer primary key,nome text,valor double, nomeCategoria text)");
         db.execSQL("CREATE TABLE if not exists login(id INTEGER primary key autoincrement,token text,permissao INTEGER)");
+        db.execSQL("CREATE TABLE if not exists dadosPessoais(id INTEGER primary key autoincrement,nome text,email text, telefone text)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
+    }
+
+    public void checkTables(){
+        db = getReadableDatabase();
+        onCreate(db);
     }
 
     public void setLogin(String token, int permissao){
@@ -49,6 +56,24 @@ public class DbOpenhelper extends SQLiteOpenHelper {
                 db.update("login",values,"id="+id, null);
             }else{
                 db.insert("login","",values);
+            }
+        }finally {
+            db.close();
+        }
+    }
+    public void setDadosPessoais(String nome, String email, String telefone){
+        db = getReadableDatabase();
+        Cursor c = db.rawQuery("select * from dadosPessoais",null);
+        try {
+            ContentValues values = new ContentValues();
+            values.put("nome",nome);
+            values.put("email",email);
+            values.put("telefone",telefone);
+            if(c.moveToFirst()){
+                int id = c.getInt(c.getColumnIndex("id"));
+                db.update("dadosPessoais",values,"id="+id, null);
+            }else{
+                db.insert("dadosPessoais","",values);
             }
         }finally {
             db.close();
@@ -133,6 +158,21 @@ public class DbOpenhelper extends SQLiteOpenHelper {
         return retorno;
     }
 
+    public DadosPessoais getDadosPessoais(){
+        db = getReadableDatabase();
+        DadosPessoais retorno = null;
+        Cursor c = db.rawQuery("select * from dadosPessoais",null);
+        if(c.moveToFirst()){
+            String nome = c.getString(c.getColumnIndex("nome"));
+            String email = c.getString(c.getColumnIndex("email"));
+            String telefone = c.getString(c.getColumnIndex("telefone"));
+            retorno = new DadosPessoais(nome,email,telefone);
+        }else{
+            retorno = new DadosPessoais("NULO","NULO","NULO");
+        }
+        db.close();
+        return retorno;
+    }
     public ArrayList<String> getListaCategoria(){
         db = getReadableDatabase();
         ArrayList<String> nameCategoria = new ArrayList<>();
@@ -292,6 +332,7 @@ public class DbOpenhelper extends SQLiteOpenHelper {
         db = getReadableDatabase();
         try {
             db.execSQL("DROP TABLE IF EXISTS login");
+            db.execSQL("DROP TABLE IF EXISTS dadosPessoais");
             db.execSQL("DROP TABLE IF EXISTS mesa");
             db.execSQL("DROP TABLE IF EXISTS categoria");
             db.execSQL("DROP TABLE IF EXISTS produto");

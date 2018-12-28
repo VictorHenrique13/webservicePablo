@@ -31,25 +31,25 @@
                 android:orientation="vertical"
                 android:layout_marginLeft="4dp"
                 android:layout_height="match_parent">
+
                 <TextView
+                    android:id="@+id/NomeSliding"
+                    style="@style/Base.TextAppearance.AppCompat.Body1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/Base.TextAppearance.AppCompat.Body1"
-                    android:textSize="18sp"
-                    android:gravity="center_vertical"
+                    android:layout_marginLeft="4dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginLeft="4dp"
-                    android:text="Victor Henrique"
-                    />
+                    android:gravity="center_vertical"
+                    android:textSize="18sp" />
+
                 <TextView
+                    android:id="@+id/EmailSliding"
+                    style="@style/Base.TextAppearance.AppCompat.Body1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/Base.TextAppearance.AppCompat.Body1"
-                    android:textSize="16sp"
-                    android:layout_marginTop="4dp"
                     android:layout_marginLeft="4dp"
-                    android:text="Victorhgm13@gmail.com"
-                    />
+                    android:layout_marginTop="4dp"
+                    android:textSize="16sp" />
 
             </LinearLayout>
             <View

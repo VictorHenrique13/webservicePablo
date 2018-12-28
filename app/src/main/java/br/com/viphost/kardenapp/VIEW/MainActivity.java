@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DB = new DbOpenhelper(this);
+        DB.checkTables();
         String token = DB.getToken();
         if(!token.isEmpty()&&token!="vazio"){//Auto Ir Mesas Activity se ja logado
             Intent m = new Intent(getApplicationContext(),Mesas.class);
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }else{
             DB.recreateAllTables();
+            DB.insertCategoria("Precisa Atualizar Primeiro");
         }
         setContentView(R.layout.activity_main);
 

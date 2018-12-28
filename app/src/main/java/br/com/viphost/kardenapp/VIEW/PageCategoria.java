@@ -26,11 +26,14 @@ import br.com.viphost.kardenapp.CONTROLLER.GraphqlClient;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlError;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlResponse;
 import br.com.viphost.kardenapp.CONTROLLER.connections.AtualizarPermissao;
+import br.com.viphost.kardenapp.CONTROLLER.connections.menudeslizante.EnviarCadastroProduto;
 import br.com.viphost.kardenapp.CONTROLLER.connections.pagecategoria.AtualizarProdutos;
 import br.com.viphost.kardenapp.CONTROLLER.tipos.ListaProdutos;
 import br.com.viphost.kardenapp.CONTROLLER.queries.ListarProdutos;
 import br.com.viphost.kardenapp.CONTROLLER.utils.Balao;
+import br.com.viphost.kardenapp.CONTROLLER.utils.BinaryTool;
 import br.com.viphost.kardenapp.CONTROLLER.utils.Memoria;
+import br.com.viphost.kardenapp.MODEL.DadosPessoais;
 import br.com.viphost.kardenapp.MODEL.Produto;
 import br.com.viphost.kardenapp.R;
 import br.com.viphost.kardenapp.VIEW.Adapter.AdapterSingleCategoria;
@@ -51,6 +54,8 @@ public class PageCategoria extends AppCompatActivity {
     private ArrayList<Produto> prod = new ArrayList<Produto>();
     private Produto produto;
     private BottomSheetDialog bottomSheetDialog;
+    private TextView NomeSliding;
+    private TextView EmailSliding;
 
 //--------------------------------------------------
     private TextInputLayout layNomeProdCad;
@@ -63,7 +68,7 @@ public class PageCategoria extends AppCompatActivity {
     private TextView btnCancelCad;
     private LinearLayout btnCadastrarProduto;
     private Spinner spinner;
-    private String[] categorias = {"Categorias"};
+    //private String[] categorias = {"Categorias"};//Preciso recriar dentro do ClickListener pois nao e possivel fixar um tamanho antes
     private String nomeCategoria;
     private androidx.appcompat.app.AlertDialog alertCadastroProduto;
 
@@ -83,6 +88,11 @@ public class PageCategoria extends AppCompatActivity {
         bottomSheetDialog = new BottomSheetDialog(PageCategoria.this);
         View modal = getLayoutInflater().inflate(R.layout.bottom_behavior,null);
         bottomSheetDialog.setContentView(modal);
+        NomeSliding = modal.findViewById(R.id.NomeSliding);
+        EmailSliding = modal.findViewById(R.id.EmailSliding);
+        DadosPessoais dadosPessoais = DB.getDadosPessoais();
+        NomeSliding.setText(dadosPessoais.getNome());
+        EmailSliding.setText(dadosPessoais.getEmail());
         carShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,11 +117,18 @@ public class PageCategoria extends AppCompatActivity {
 
         //funçoes menu deslizante-------------------------------
         btnCadastrarProduto = modal.findViewById(R.id.cadastrarProdutoAction);
+        if(BinaryTool.BitValueOfInt(DB.getPermissao(),7)==false){
+            btnCadastrarProduto.setVisibility(View.GONE);
+        }
         btnCadastrarProduto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 androidx.appcompat.app.AlertDialog.Builder b = new androidx.appcompat.app.AlertDialog.Builder(PageCategoria.this);
                 View cadastroDialog = LayoutInflater.from(PageCategoria.this).inflate(R.layout.cadastro_produto,null);
+                ArrayList<String> categoriasList = DB.getListaCategoria();
+                String[] categorias = new String[categoriasList.size()];
+                categorias = categoriasList.toArray(categorias);
+
                 edtNomeProdCad = cadastroDialog.findViewById(R.id.edtNomeProdCad);
                 edtPrecoProdCad = cadastroDialog.findViewById(R.id.edtPrecoCad);
                 layNomeProdCad = cadastroDialog.findViewById(R.id.layNomeProdCad);
@@ -125,8 +142,9 @@ public class PageCategoria extends AppCompatActivity {
                 //dados para envio em formato usavel
                 //caso algum tipo de variavel esta errado so realizar troca
 
-                String nomeProdutoCadastro = edtNomeProdCad.getText().toString();
-                String precoProdutoCAdastro = edtPrecoProdCad.getText().toString();
+                //Desatualizado, vou puxar novamente dentro do click Listener, String é considerado primitivo em java entao isto nao é um ponteiro
+                //String nomeProdutoCadastro = edtNomeProdCad.getText().toString();
+                //String precoProdutoCAdastro = edtPrecoProdCad.getText().toString();
 
                 //-----------------------------------------------------------------------------
                 spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -146,16 +164,21 @@ public class PageCategoria extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         if(validateCadastroProd()){
-                            //conexao server aqui
-
-
-                            //-------------------------------
-                            //conexao offline aqui-------
-
-
-
-                            //-----------------------------
-
+                            String nomeProdutoCadastro = edtNomeProdCad.getText().toString();
+                            String precoProdutoCadastroStr = edtPrecoProdCad.getText().toString();
+                            double precoProdutoCadastro;
+                            try{
+                                precoProdutoCadastro = Double.parseDouble(precoProdutoCadastroStr);
+                            }catch(Exception e){
+                                new Balao(PageCategoria.this, "Insira um valor no formato correto Ex.: 000.00", Toast.LENGTH_SHORT);
+                                return;
+                            }
+                            //conexao server aqui--------------------//
+                            new EnviarCadastroProduto(PageCategoria.this,nomeProdutoCadastro,precoProdutoCadastro,nomeCategoria).run(true);
+                            //---------------------------------------//
+                            //conexao offline aqui-------------------//
+                            //? vou inserir no SQLite na classe acima//
+                            //---------------------------------------//
                             edtPrecoProdCad.setText("");
                             edtNomeProdCad.setText("");
                             edtNomeProdCad.findFocus();

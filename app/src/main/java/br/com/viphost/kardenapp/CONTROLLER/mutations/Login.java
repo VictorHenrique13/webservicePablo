@@ -22,7 +22,7 @@ public class Login extends Mutation{
             String json = graphqlClient.Query(
                 "mutation{" +
                     "login(usuario:\""+usuario+"\",senha:\""+senha+"\",dispositivo:\""+dispositivo+"\",id_dispositivo: \""+id_dispositivo+"\"){" +
-                        "token,permissao" +
+                        "nome,token,permissao" +
                     "}" +
                 "}"
             );

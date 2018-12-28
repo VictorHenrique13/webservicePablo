@@ -20,6 +20,7 @@ public class GraphqlClient {
     private Gson gson;
     private boolean secure = false;
     private boolean sandbox = true;
+    private boolean debug = true;
 
     public GraphqlClient(){
         host  = "app.viphost.com.br";
@@ -39,6 +40,9 @@ public class GraphqlClient {
     public void setSecure(boolean secure){
         this.secure = secure;
     }
+    public void setDebugger(boolean debug){
+        this.debug = debug;
+    }
     private String sendData(String data) {
         final String finaldata = data;
         AsyncTask at = new AsyncTask() {
@@ -51,7 +55,9 @@ public class GraphqlClient {
                     else protocol = "http://";
                     String url = protocol + host + "/" + path;
                     if(sandbox){
-                        System.out.println("SANDBOX ATIVADO");
+                        if(debug){
+                            System.out.println("SANDBOX ATIVADO");
+                        }
                         url = protocol + host + "/sandbox/" + path;
                     }
 
@@ -78,7 +84,9 @@ public class GraphqlClient {
 
 
                     String json = in.readLine();
-                    System.out.println(json);
+                    if(debug){
+                        System.out.println(json);
+                    }
                     in.close();
                     return json;
                 }catch (IOException e){
@@ -122,7 +130,7 @@ public class GraphqlClient {
     }
     public String Query(String query){
         query = query.replace("\"", "\\\"");
-        if(sandbox){
+        if(debug){
             System.out.println("{\"query\":\""+query+"\"}");
         }
         String data;

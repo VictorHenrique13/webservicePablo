@@ -4,6 +4,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,9 +29,12 @@ import br.com.viphost.kardenapp.CONTROLLER.GraphqlClient;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlError;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlResponse;
 import br.com.viphost.kardenapp.CONTROLLER.connections.AtualizarPermissao;
+import br.com.viphost.kardenapp.CONTROLLER.connections.menudeslizante.EnviarCadastroProduto;
 import br.com.viphost.kardenapp.CONTROLLER.mutations.AdicionarPedido;
 import br.com.viphost.kardenapp.CONTROLLER.utils.Balao;
+import br.com.viphost.kardenapp.CONTROLLER.utils.BinaryTool;
 import br.com.viphost.kardenapp.CONTROLLER.utils.Memoria;
+import br.com.viphost.kardenapp.MODEL.DadosPessoais;
 import br.com.viphost.kardenapp.MODEL.Produto;
 import br.com.viphost.kardenapp.R;
 import br.com.viphost.kardenapp.VIEW.Adapter.AdapterSingleCategoria;
@@ -54,6 +58,8 @@ public class Carrinho extends AppCompatActivity {
     private ArrayList<Produto> prods = new ArrayList<>();
     private AlertDialog confirm;
     private BottomSheetDialog bottomSheetDialog;
+    private TextView NomeSliding;
+    private TextView EmailSliding;
     private DbOpenhelper DB;
 
 
@@ -67,7 +73,7 @@ public class Carrinho extends AppCompatActivity {
     private TextView btnCancelCad;
     private LinearLayout btnCadastrarProduto;
     private Spinner spinner;
-    private String[] categorias = {"Categorias"};
+    //private String[] categorias = {"Categorias"};//Preciso recriar dentro do ClickListener pois nao e possivel fixar um tamanho antes
     private String nomeCategoria;
     private androidx.appcompat.app.AlertDialog alertCadastroProduto;
     @Override
@@ -84,6 +90,16 @@ public class Carrinho extends AppCompatActivity {
         recyclerView =findViewById(R.id.recyclerCarrinho);
         DB = new DbOpenhelper(this);
         new AtualizarPermissao(this).run(true);
+        if(BinaryTool.BitValueOfInt(DB.getPermissao(),4)==false){
+            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams)floatingActionButton.getLayoutParams();
+            p.setAnchorId(View.NO_ID);
+            p.width = 0;
+            p.height = 0;
+            floatingActionButton.setLayoutParams(p);
+            floatingActionButton.hide();
+            //((View) floatingActionButton).setVisibility(View.GONE);
+            //Esconder o botao de cadastro
+        }
         setSupportActionBar(toolbar);
         ActionBar t = getSupportActionBar();
         t.setTitle("Carrinho (Mesa: "+Memoria.getMesaAtual()+")");
@@ -93,6 +109,11 @@ public class Carrinho extends AppCompatActivity {
         bottomSheetDialog = new BottomSheetDialog(Carrinho.this);
         View modal = getLayoutInflater().inflate(R.layout.bottom_behavior,null);
         bottomSheetDialog.setContentView(modal);
+        NomeSliding = modal.findViewById(R.id.NomeSliding);
+        EmailSliding = modal.findViewById(R.id.EmailSliding);
+        DadosPessoais dadosPessoais = DB.getDadosPessoais();
+        NomeSliding.setText(dadosPessoais.getNome());
+        EmailSliding.setText(dadosPessoais.getEmail());
         menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,11 +125,18 @@ public class Carrinho extends AppCompatActivity {
 
         //funçoes menu deslizante-------------------------------
         btnCadastrarProduto = modal.findViewById(R.id.cadastrarProdutoAction);
+        if(BinaryTool.BitValueOfInt(DB.getPermissao(),7)==false){
+            btnCadastrarProduto.setVisibility(View.GONE);
+        }
         btnCadastrarProduto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 androidx.appcompat.app.AlertDialog.Builder b = new androidx.appcompat.app.AlertDialog.Builder(Carrinho.this);
                 View cadastroDialog = LayoutInflater.from(Carrinho.this).inflate(R.layout.cadastro_produto,null);
+                ArrayList<String> categoriasList = DB.getListaCategoria();
+                String[] categorias = new String[categoriasList.size()];
+                categorias = categoriasList.toArray(categorias);
+
                 edtNomeProdCad = cadastroDialog.findViewById(R.id.edtNomeProdCad);
                 edtPrecoProdCad = cadastroDialog.findViewById(R.id.edtPrecoCad);
                 layNomeProdCad = cadastroDialog.findViewById(R.id.layNomeProdCad);
@@ -122,8 +150,9 @@ public class Carrinho extends AppCompatActivity {
                 //dados para envio em formato usavel
                 //caso algum tipo de variavel esta errado so realizar troca
 
-                String nomeProdutoCadastro = edtNomeProdCad.getText().toString();
-                String precoProdutoCAdastro = edtPrecoProdCad.getText().toString();
+                //Desatualizado, vou puxar novamente dentro do click Listener, String é considerado primitivo em java entao isto nao é um ponteiro
+                //String nomeProdutoCadastro = edtNomeProdCad.getText().toString();
+                //String precoProdutoCAdastro = edtPrecoProdCad.getText().toString();
 
                 //-----------------------------------------------------------------------------
                 spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -143,16 +172,21 @@ public class Carrinho extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         if(validateCadastroProd()){
-                            //conexao server aqui
-
-
-                            //-------------------------------
-                            //conexao offline aqui-------
-
-
-
-                            //-----------------------------
-
+                            String nomeProdutoCadastro = edtNomeProdCad.getText().toString();
+                            String precoProdutoCadastroStr = edtPrecoProdCad.getText().toString();
+                            double precoProdutoCadastro;
+                            try{
+                                precoProdutoCadastro = Double.parseDouble(precoProdutoCadastroStr);
+                            }catch(Exception e){
+                                new Balao(Carrinho.this, "Insira um valor no formato correto Ex.: 000.00", Toast.LENGTH_SHORT);
+                                return;
+                            }
+                            //conexao server aqui--------------------//
+                            new EnviarCadastroProduto(Carrinho.this,nomeProdutoCadastro,precoProdutoCadastro,nomeCategoria).run(true);
+                            //---------------------------------------//
+                            //conexao offline aqui-------------------//
+                            //? vou inserir no SQLite na classe acima//
+                            //---------------------------------------//
                             edtPrecoProdCad.setText("");
                             edtNomeProdCad.setText("");
                             edtNomeProdCad.findFocus();
@@ -176,7 +210,6 @@ public class Carrinho extends AppCompatActivity {
                 alertCadastroProduto.show();
             }
         });
-
         //--------------------------------------
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
