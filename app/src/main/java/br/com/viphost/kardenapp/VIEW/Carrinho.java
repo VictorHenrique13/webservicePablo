@@ -238,7 +238,7 @@ public class Carrinho extends AppCompatActivity {
                             br.com.viphost.kardenapp.CONTROLLER.tipos.Logico response = (br.com.viphost.kardenapp.CONTROLLER.tipos.Logico)resposta;
                             if(response.getValor()){
                                 new Balao(Carrinho.this,"Pedido Realizado",Toast.LENGTH_SHORT).show();
-                                Intent m = new Intent(Carrinho.this,Mesas.class);
+                                Intent m = new Intent(Carrinho.this,Pedidos.class);
                                 m.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(m);
                                 Carrinho.this.finish();

@@ -35,5 +35,6 @@ public class ViewH extends RecyclerView.ViewHolder {
         remove = itemView.findViewById(R.id.imgRemoveProd);
         //-------------------------------------------------------------
 
+
     }
 }

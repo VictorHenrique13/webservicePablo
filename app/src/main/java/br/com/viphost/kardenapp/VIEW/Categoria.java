@@ -123,7 +123,8 @@ public class Categoria extends AppCompatActivity {
             public void onClick(View v) {
                 startActivity(new Intent(Categoria.this,Carrinho.class));
             }
-        }); bottomSheetDialog = new BottomSheetDialog(Categoria.this);
+        });
+        bottomSheetDialog = new BottomSheetDialog(Categoria.this);
         View modal = getLayoutInflater().inflate(R.layout.bottom_behavior,null);
         bottomSheetDialog.setContentView(modal);
         NomeSliding = modal.findViewById(R.id.NomeSliding);

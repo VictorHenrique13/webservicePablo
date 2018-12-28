@@ -39,6 +39,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="4dp"
                     android:layout_marginTop="8dp"
+                    android:textColor="#000"
                     android:gravity="center_vertical"
                     android:textSize="18sp" />
 
@@ -76,15 +77,15 @@
                 android:background="@drawable/riple"
                 android:layout_height="60dp">
                 <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/ic_perm_contact_calendar_black_24dp"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Perfil"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     style="@style/Base.TextAppearance.AppCompat.Body1"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="16dp"
@@ -97,15 +98,15 @@
                 android:id="@+id/cadastrarProdutoAction"
                 android:layout_height="60dp">
                 <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/ic_add_shopping_cart_black_24dp"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="Cadastrar Produto"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     style="@style/Base.TextAppearance.AppCompat.Body1"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="16dp"
@@ -117,15 +118,15 @@
                 android:padding="16dp"
                 android:layout_height="60dp">
                 <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/ic_chat_black_24dp"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Feedback"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     style="@style/Base.TextAppearance.AppCompat.Body1"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="16dp"
@@ -137,15 +138,15 @@
                 android:padding="16dp"
                 android:layout_height="60dp">
                 <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/ic_build_black_24dp"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Configurações"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     style="@style/Base.TextAppearance.AppCompat.Body1"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="16dp"
