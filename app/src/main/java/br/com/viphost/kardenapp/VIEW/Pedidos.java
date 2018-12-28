@@ -17,6 +17,7 @@ import br.com.viphost.kardenapp.VIEW.Adapter.AdapterPedidos;
 import br.com.viphost.kardenapp.VIEW.Adapter.AdapterWithIcon;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,11 +66,11 @@ public class Pedidos extends AppCompatActivity {
     private DbOpenhelper DB;
     private TextView NomeSliding;
     private  TextView EmailSliding;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pedidos);
+        floatingActionButton = findViewById(R.id.floatingG);
         toolbar = findViewById(R.id.toolbar);
         bottomAppBar = findViewById(R.id.bottomAppBar);
         setSupportActionBar(toolbar);
@@ -82,7 +83,12 @@ public class Pedidos extends AppCompatActivity {
         bottomSheetDialog.setContentView(modal);
         NomeSliding = modal.findViewById(R.id.NomeSliding);
         EmailSliding = modal.findViewById(R.id.EmailSliding);
-
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Pedidos.this,Mesas.class));
+            }
+        });
         menuUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

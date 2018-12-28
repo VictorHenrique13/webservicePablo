@@ -20,6 +20,13 @@ public class ViewH extends RecyclerView.ViewHolder {
     public TextView txtPrecoSingle;
     public ImageView add;
     public ImageView remove;
+    //itens pedido
+    public RecyclerView recyclerViewItensPeedido;
+    public TextView txtTitleItensPedido;
+    public TextView txtTotalComanda;
+//---------------------
+    public TextView txtNomeProdItem;
+    public TextView totalItemProd;
     //-----------------
     public ViewH(@NonNull View itemView) {
         super(itemView);
@@ -34,7 +41,12 @@ public class ViewH extends RecyclerView.ViewHolder {
         add = itemView.findViewById(R.id.imgAddProd);
         remove = itemView.findViewById(R.id.imgRemoveProd);
         //-------------------------------------------------------------
-
-
+        //itens pedido
+        recyclerViewItensPeedido = itemView.findViewById(R.id.recyclerItensPedido);
+        txtTitleItensPedido = itemView.findViewById(R.id.txtTitleItensPedidos);
+        txtTotalComanda = itemView.findViewById(R.id.txtTotalPedidos);
+        //itens list pedidos
+        txtNomeProdItem = itemView.findViewById(R.id.txtlistItemNome);
+        totalItemProd = itemView.findViewById(R.id.txtTotalItem);
     }
 }
