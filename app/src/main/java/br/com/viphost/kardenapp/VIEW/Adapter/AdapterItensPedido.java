@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import br.com.viphost.kardenapp.MODEL.ItemPedido;
 import br.com.viphost.kardenapp.MODEL.Produto;
 import br.com.viphost.kardenapp.R;
 import br.com.viphost.kardenapp.VIEW.Holder.ViewH;
@@ -16,12 +17,12 @@ import br.com.viphost.kardenapp.VIEW.Holder.ViewH;
 public class AdapterItensPedido extends RecyclerView.Adapter<ViewH> {
 
     private Context context;
-    private ArrayList<Produto> itemPedido;
+    private ArrayList<ItemPedido> itemPedido;
 
 
 
 
-    public AdapterItensPedido(Context context, ArrayList<Produto> itemPedido) {
+    public AdapterItensPedido(Context context, ArrayList<ItemPedido> itemPedido) {
         this.context = context;
         this.itemPedido = itemPedido;
     }
@@ -35,9 +36,11 @@ public class AdapterItensPedido extends RecyclerView.Adapter<ViewH> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewH holder, int position) {
-        Produto g = itemPedido.get(position);
-        holder.txtNomeProdItem.setText(g.getNome());
-        holder.totalItemProd.setText(g.getPreco());
+        ItemPedido g = itemPedido.get(position);
+        holder.txtNumeroPedido.setText(g.getNumeroPedido()+"");
+        holder.txtNomeProdItem.setText(g.getNomeProduto());
+        holder.txtQtdProduto.setText(g.getQuantidadeProduto()+"x");
+        holder.totalItemProd.setText(g.getValorTotalPedidoStr());
 
     }
 

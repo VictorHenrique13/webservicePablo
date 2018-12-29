@@ -7,14 +7,20 @@ import androidx.viewpager.widget.ViewPager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 
 import br.com.viphost.kardenapp.CONTROLLER.DAO.DbOpenhelper;
+import br.com.viphost.kardenapp.CONTROLLER.connections.AtualizarPermissao;
+import br.com.viphost.kardenapp.CONTROLLER.utils.BinaryTool;
 import br.com.viphost.kardenapp.R;
 import br.com.viphost.kardenapp.VIEW.Pager.ViewPagerAdp;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
@@ -32,9 +38,22 @@ public class MainActivity extends AppCompatActivity {
         DB = new DbOpenhelper(this);
         DB.checkTables();
         String token = DB.getToken();
-        if(!token.isEmpty()&&token!="vazio"){//Auto Ir Mesas Activity se ja logado
-            Intent m = new Intent(getApplicationContext(),Mesas.class);
-            startActivity(m);
+        if(!token.isEmpty()&&token!="vazio"){//Auto Ir Activity se ja logado
+            new AtualizarPermissao(this).run(true);
+            int permissao = DB.getPermissao();
+            if(permissao <=1){
+                //Enviar para uma activityVazia para ficar esperando uma mudança de permissao
+                Intent m = new Intent(getApplicationContext(),Pedidos.class);
+                //Intent m = new Intent(getApplicationContext(),vazio.class);
+                startActivity(m);
+            }else if(permissao == 2){
+                Intent m = new Intent(getApplicationContext(),Pedidos.class);
+                //Intent m = new Intent(getApplicationContext(),Cozinha.class);
+                startActivity(m);
+            }else{
+                Intent m = new Intent(getApplicationContext(),Mesas.class);
+                startActivity(m);
+            }
             finish();
             return;
         }else{

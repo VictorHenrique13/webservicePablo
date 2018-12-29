@@ -21,11 +21,11 @@ public class AtualizarMesas {
     private RecyclerView recyclerView;
     private ArrayList<String> ms;
     private Activity activity;
-    private AdapterNoIcon adp;
+    private RecyclerView.Adapter adp;
     private DbOpenhelper DB;
     Timer timer;
 
-    public AtualizarMesas(Activity activity, ArrayList<String> ms, RecyclerView recyclerView, AdapterNoIcon adp){
+    public AtualizarMesas(Activity activity, ArrayList<String> ms, RecyclerView recyclerView, RecyclerView.Adapter adp){
         this.recyclerView=recyclerView;
         this.ms=ms;
         this.activity=activity;
@@ -87,6 +87,9 @@ public class AtualizarMesas {
         }
     }
     public void start(){
+        start(null);
+    }
+    public void start(Boolean aberta){
         atualizarRecycler();
         final GraphqlClient graphqlClient = new GraphqlClient();
         graphqlClient.setDebugger(false);
@@ -95,7 +98,12 @@ public class AtualizarMesas {
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
-                GraphqlResponse resposta = listarMesas.run(DB.getToken(),deviceID);
+                GraphqlResponse resposta;
+                if(aberta!=null){
+                    resposta = listarMesas.run(DB.getToken(), deviceID, aberta);
+                }else {
+                    resposta = listarMesas.run(DB.getToken(), deviceID);
+                }
                 if(resposta instanceof IntArray){
                     boolean needUpdate = false;
                     IntArray array =(IntArray) resposta;

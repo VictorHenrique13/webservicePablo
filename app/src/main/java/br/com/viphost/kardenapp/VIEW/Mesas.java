@@ -47,6 +47,8 @@ import br.com.viphost.kardenapp.CONTROLLER.utils.BinaryTool;
 import br.com.viphost.kardenapp.MODEL.DadosPessoais;
 import br.com.viphost.kardenapp.R;
 import br.com.viphost.kardenapp.VIEW.Adapter.AdapterNoIcon;
+import br.com.viphost.kardenapp.VIEW.Adapter.AdapterPedidos;
+
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -69,7 +71,7 @@ public class Mesas extends AppCompatActivity {
     private ImageView carShop;
     private ImageView menuUp;
     private AtualizarMesas atualizarMesas;
-    private AdapterNoIcon adp;
+    //private AdapterNoIcon adp;
     private BottomSheetDialog bottomSheetDialog;
     private TextView NomeSliding;
     private TextView EmailSliding;
@@ -286,13 +288,21 @@ public class Mesas extends AppCompatActivity {
         });
         //fim flaoting button
         //recycler view inicio
-
-        AdapterNoIcon adp = new AdapterNoIcon(Mesas.this,ms);
+        if(BinaryTool.BitValueOfInt(DB.getPermissao(),4)==false||true&&true||BinaryTool.BitValueOfInt(DB.getPermissao(),2)==true){
+            AdapterPedidos adp = new AdapterPedidos(Mesas.this,ms);
+            recyclerView.setAdapter(adp);
+            atualizarMesas = new AtualizarMesas(this,ms,recyclerView,adp);
+            atualizarMesas.start(true);
+        }else{
+            AdapterNoIcon adp = new AdapterNoIcon(Mesas.this,ms);
+            recyclerView.setAdapter(adp);
+            atualizarMesas = new AtualizarMesas(this,ms,recyclerView,adp);
+            atualizarMesas.start();
+        }
         RecyclerView.LayoutManager mg = new LinearLayoutManager(Mesas.this);
         recyclerView.setLayoutManager(mg);
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(adp);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @SuppressLint("RestrictedApi")
             @Override
@@ -308,8 +318,6 @@ public class Mesas extends AppCompatActivity {
             }
         });
 
-        atualizarMesas = new AtualizarMesas(this,ms,recyclerView,adp);
-        atualizarMesas.start();
         AtualizarMesas.reference=atualizarMesas;
         //fim recycler view
     }

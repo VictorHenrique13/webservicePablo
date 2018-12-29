@@ -25,7 +25,9 @@ public class ViewH extends RecyclerView.ViewHolder {
     public TextView txtTitleItensPedido;
     public TextView txtTotalComanda;
 //---------------------
+    public TextView txtNumeroPedido;
     public TextView txtNomeProdItem;
+    public TextView txtQtdProduto;
     public TextView totalItemProd;
     //-----------------
     public ViewH(@NonNull View itemView) {
@@ -46,7 +48,9 @@ public class ViewH extends RecyclerView.ViewHolder {
         txtTitleItensPedido = itemView.findViewById(R.id.txtTitleItensPedidos);
         txtTotalComanda = itemView.findViewById(R.id.txtTotalPedidos);
         //itens list pedidos
+        txtNumeroPedido = itemView.findViewById(R.id.txtNumeroPedido);
         txtNomeProdItem = itemView.findViewById(R.id.txtlistItemNome);
+        txtQtdProduto = itemView.findViewById(R.id.txtQtdProduto);
         totalItemProd = itemView.findViewById(R.id.txtTotalItem);
     }
 }
