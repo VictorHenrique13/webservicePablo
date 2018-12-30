@@ -72,6 +72,7 @@ public class Carrinho extends AppCompatActivity {
     private TextView btnConfirmCad;
     private TextView btnCancelCad;
     private LinearLayout btnCadastrarProduto;
+    private LinearLayout btnIrParaPedidos;
     private Spinner spinner;
     //private String[] categorias = {"Categorias"};//Preciso recriar dentro do ClickListener pois nao e possivel fixar um tamanho antes
     private String nomeCategoria;
@@ -125,9 +126,17 @@ public class Carrinho extends AppCompatActivity {
 
         //funçoes menu deslizante-------------------------------
         btnCadastrarProduto = modal.findViewById(R.id.cadastrarProdutoAction);
+        btnIrParaPedidos = modal.findViewById(R.id.irParaPedidosAction);
         if(BinaryTool.BitValueOfInt(DB.getPermissao(),7)==false){
             btnCadastrarProduto.setVisibility(View.GONE);
         }
+        btnIrParaPedidos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent m = new Intent(getApplicationContext(),Pedidos.class);
+                startActivity(m);
+            }
+        });
         btnCadastrarProduto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

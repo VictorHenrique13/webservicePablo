@@ -94,7 +94,7 @@ public class Cadastro extends Fragment {
                                 DB.setLogin(login.getToken(),login.getPermissao());
                                 DB.setDadosPessoais(login.getNome(),email,login.getTelefone());
                                 new Balao(getActivity(),"Cadastro Realizado",Toast.LENGTH_SHORT).show();
-                                Intent m = new Intent(getActivity(),Mesas.class);
+                                Intent m = new Intent(getActivity(),MainActivity.class);
                                 m.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(m);
                                 getActivity().finish();

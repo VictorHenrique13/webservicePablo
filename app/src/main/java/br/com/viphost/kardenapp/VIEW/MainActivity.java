@@ -50,6 +50,10 @@ public class MainActivity extends AppCompatActivity {
                 Intent m = new Intent(getApplicationContext(),Pedidos.class);
                 //Intent m = new Intent(getApplicationContext(),Cozinha.class);
                 startActivity(m);
+            }else if(BinaryTool.BitValueOfInt(permissao,4)==false&&BinaryTool.BitValueOfInt(permissao,2)==true){
+                Intent m = new Intent(getApplicationContext(),Pedidos.class);
+                //Intent m = new Intent(getApplicationContext(),Cozinha.class);
+                startActivity(m);
             }else{
                 Intent m = new Intent(getApplicationContext(),Mesas.class);
                 startActivity(m);

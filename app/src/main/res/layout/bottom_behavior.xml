@@ -113,6 +113,27 @@
                     />
             </LinearLayout>
             <LinearLayout
+                android:layout_width="match_parent"
+                android:padding="16dp"
+                android:id="@+id/irParaPedidosAction"
+                android:layout_height="60dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@android:drawable/checkbox_on_background" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Pedidos"
+                    android:textSize="16sp"
+                    style="@style/Base.TextAppearance.AppCompat.Body1"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="16dp"
+                    />
+            </LinearLayout>
+            <LinearLayout
                 android:id="@+id/feedBackAction"
                 android:layout_width="match_parent"
                 android:padding="16dp"

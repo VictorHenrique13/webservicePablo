@@ -84,7 +84,7 @@ public class Login extends Fragment {
                               DB.setDadosPessoais(login.getNome(),email,login.getTelefone());
                               new Balao(getActivity(),"Login Realizado",Toast.LENGTH_SHORT).show();
                               new AtualizarCategorias(getActivity()).run(true);
-                              Intent m = new Intent(getActivity(),Mesas.class);
+                              Intent m = new Intent(getActivity(),MainActivity.class);
                               m.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                               startActivity(m);
                               getActivity().finish();

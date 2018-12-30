@@ -78,6 +78,7 @@ public class Mesas extends AppCompatActivity {
     private Spinner spinner;
     private String nomeCategoria;
     private LinearLayout btnCadastrarProduto;
+    private LinearLayout btnIrParaPedidos;
     private AlertDialog alertCadastroProduto;
     //private String[] categorias = {"Categorias"};//Preciso recriar dentro do ClickListener pois nao e possivel fixar um tamanho antes
     //referencias da dialog Cadasreo produto
@@ -142,9 +143,17 @@ public class Mesas extends AppCompatActivity {
         });
         //funçoes menu deslizante
         btnCadastrarProduto = modal.findViewById(R.id.cadastrarProdutoAction);
+        btnIrParaPedidos = modal.findViewById(R.id.irParaPedidosAction);
         if(BinaryTool.BitValueOfInt(DB.getPermissao(),7)==false){
             btnCadastrarProduto.setVisibility(View.GONE);
         }
+        btnIrParaPedidos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent m = new Intent(getApplicationContext(),Pedidos.class);
+                startActivity(m);
+            }
+        });
         btnCadastrarProduto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -287,18 +296,19 @@ public class Mesas extends AppCompatActivity {
             }
         });
         //fim flaoting button
-        //recycler view inicio
-        if(BinaryTool.BitValueOfInt(DB.getPermissao(),4)==false/*||true&&true||*/&&BinaryTool.BitValueOfInt(DB.getPermissao(),2)==true){
+        /*/recycler view inicio
+        if(BinaryTool.BitValueOfInt(DB.getPermissao(),4)==false&&BinaryTool.BitValueOfInt(DB.getPermissao(),2)==true){
             AdapterPedidos adp = new AdapterPedidos(Mesas.this,ms);
             recyclerView.setAdapter(adp);
             atualizarMesas = new AtualizarMesas(this,ms,recyclerView,adp);
             atualizarMesas.start(true);
         }else{
-            AdapterNoIcon adp = new AdapterNoIcon(Mesas.this,ms);
-            recyclerView.setAdapter(adp);
-            atualizarMesas = new AtualizarMesas(this,ms,recyclerView,adp);
-            atualizarMesas.start();
         }
+        */
+        AdapterNoIcon adp = new AdapterNoIcon(Mesas.this,ms);
+        recyclerView.setAdapter(adp);
+        atualizarMesas = new AtualizarMesas(this,ms,recyclerView,adp);
+        atualizarMesas.start();
         RecyclerView.LayoutManager mg = new LinearLayoutManager(Mesas.this);
         recyclerView.setLayoutManager(mg);
         recyclerView.setHasFixedSize(true);
