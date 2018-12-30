@@ -32,18 +32,17 @@ public class ObterPedidos {
     private final ArrayList<ItemPedido> pr;
     private final DbOpenhelper DB;
     private Ponteiro valorTotal;
-    private Thread waiter = null;
-    private int result = 0;
+    private int result = -2;
     public ObterPedidos(Activity activity, int mesa, ArrayList<ItemPedido> pr, Ponteiro valorTotal){
         this.ACTIVITY = activity;
         this.mesa=mesa;
         this.pr=pr;
         this.DB = new DbOpenhelper(this.ACTIVITY);
         this.valorTotal=valorTotal;
+        pr.clear();
     }
 
     private void processar(){
-        result = -1;
         final String deviceID = new DeviceInfo().getDeviceID(ACTIVITY);
         final GraphqlClient graphqlClient = new GraphqlClient();
         final ListarPedidos listarPedidos = new ListarPedidos(graphqlClient);
@@ -82,6 +81,7 @@ public class ObterPedidos {
             valorTotal.setValue((Double)total);
             result=1;
         }else if(resposta instanceof GraphqlError){
+            result=0;
             final GraphqlError error = (GraphqlError) resposta;
             if(error.getCode()==2){//token expirado
                 Intent m = new Intent(ACTIVITY,MainActivity.class);
@@ -99,14 +99,13 @@ public class ObterPedidos {
                 new Balao(ACTIVITY, error.getMessage() + ". " + error.getCategory() + "[" + error.getCode() + "]", Toast.LENGTH_LONG).show();
             }
         } else{
+            result=0;
             new Balao(ACTIVITY,"Erro desconhecido",Toast.LENGTH_LONG).show();
         }
-        waiter.interrupt();
-        waiter=null;
         //progressDialog.dismiss();
     }
     public void run(boolean inThread){
-        waiter=new Thread();
+        result=-1;
         if(inThread){
             Runnable runnable = new Runnable() {
                 @Override
@@ -119,9 +118,20 @@ public class ObterPedidos {
             processar();
         }
     }
+    public void run(Thread threadToInterruptOnFinaly){
+        result=-1;
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                processar();
+                threadToInterruptOnFinaly.interrupt();
+            }
+        };
+        new Thread(runnable).start();
+    }
 
     public void run(ProgressDialog progressDialog){
-        waiter=new Thread();
+        result=-1;
         if(!progressDialog.isShowing()){
             progressDialog.show();
         }
@@ -134,48 +144,23 @@ public class ObterPedidos {
         };
         new Thread(runnable).start();
     }
-
-    public void runInAsyncTask(){
-        AsyncTask at = new AsyncTask() {
-            @Override
-            protected Object doInBackground(Object[] objects) {
-                processar();
-                return null;
-            }
-        };
-        at.execute((Object) null);
-    }
-    public void runInAsyncTask(ProgressDialog progressDialog){
+    public void run(ProgressDialog progressDialog,Thread threadToInterruptOnFinaly){
+        result=-1;
         if(!progressDialog.isShowing()){
             progressDialog.show();
         }
-        AsyncTask at = new AsyncTask() {
+        Runnable runnable = new Runnable() {
             @Override
-            protected Object doInBackground(Object[] objects) {
+            public void run() {
                 processar();
+                threadToInterruptOnFinaly.interrupt();
                 progressDialog.dismiss();
-                return null;
             }
         };
-        at.execute((Object) null);
+        new Thread(runnable).start();
     }
-    public int gerResult(){
+
+    public int getResult() {
         return result;
-    }
-    public void esperarTerminar(int timeout){
-        if(waiter==null){
-            return;
-        }
-        AsyncTask at = new AsyncTask() {
-            @Override
-            protected Object doInBackground(Object[] objects) {
-                try {
-                    waiter.sleep(timeout);
-                } catch (InterruptedException e) {
-                }
-                return null;
-            }
-        };
-        at.execute((Object) null);
     }
 }

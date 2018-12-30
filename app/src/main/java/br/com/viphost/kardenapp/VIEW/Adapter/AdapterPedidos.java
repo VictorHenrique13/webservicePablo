@@ -52,7 +52,6 @@ public class AdapterPedidos extends RecyclerView.Adapter<ViewH> {
         holder.txtTitleMesa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String totalStr = "Total não calculado";
                 int numeroMesa;
                 try{
                     numeroMesa= Integer.parseInt(pedidos.get(position));
@@ -63,61 +62,80 @@ public class AdapterPedidos extends RecyclerView.Adapter<ViewH> {
                 ///////Conexao começa aq///
                 Ponteiro valorTotal = new Ponteiro("Total não calculado");
                 ObterPedidos obterPedidos = new ObterPedidos(context,numeroMesa,pr,valorTotal);
-                //ProgressDialog progressDialog = ProgressDialog.show(context, "Carregando pedidos...","Carregando pedidos, aguarde...",true,false);
+                ProgressDialog progressDialog = ProgressDialog.show(context, "Carregando pedidos...","Carregando pedidos, aguarde...",true,false);
 
-                obterPedidos.run(false);
-
-                //obterPedidos.esperarTerminar(10000);
-                int result = obterPedidos.gerResult();
-                if(result==1){
-                    if(valorTotal.getValue() instanceof Double){
-                        Double valor = (Double) valorTotal.getValue();
-                        totalStr = String.format("R$ %.2f", valor);
-                    }
-                }else if(result==0){
-                    new Balao(context,"Não carregado", Toast.LENGTH_SHORT);
-                    return;
-                }else{//Erro na conexao, ela ja vai gerar o seu propio Toast
-                    System.out.println("erro para puxar pedidos");
-                    return;
-                }
-                //Termina aq
-                //if error { return;}
-
-                ///Daq pra baixo vai ser tudo ignorado se der erro na conexao
-                System.out.println("passou");
-                AlertDialog.Builder b = new AlertDialog.Builder(context);
-                View dp = LayoutInflater.from(context).inflate(R.layout.dialog_inf,null);
-                TextView txtTitleItemPedido = dp.findViewById(R.id.txtTitleItensPedidos);
-                TextView txtTotalComanda = dp.findViewById(R.id.txtTotalPedidos);
-                RecyclerView recyclerView = dp.findViewById(R.id.recyclerItensPedido);
-                RecyclerView.LayoutManager ln = new LinearLayoutManager(context);
-                AdapterItensPedido adp = new AdapterItensPedido(context,pr);
-                recyclerView.setLayoutManager(ln);
-                recyclerView.setItemAnimator(new DefaultItemAnimator());
-                recyclerView.setAdapter(adp);
-                txtTotalComanda.setText(totalStr);
-                txtTitleItemPedido.setText(pedidos.get(position));
-
-
-                b.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                obterPedidos.run(true);
+                Runnable runnable = new Runnable() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialogDelete.dismiss();
+                    public void run() {
+                        String totalStr = "Total não calculado";
+                        int timeout = 0;
+                        while(obterPedidos.getResult()<0){
+                            if(timeout>=30000){
+                                new Balao(context,"Conexão exedeu o tempo limite", Toast.LENGTH_SHORT).show();
+                                progressDialog.dismiss();
+                                return;
+                            }
+                            try {
+                                Thread.sleep(1);
+                            } catch (InterruptedException e) {
 
+                            }
+                            timeout++;
+                        }
+                        progressDialog.dismiss();
+                        if(obterPedidos.getResult()==0){
+                            return;
+                        }
+                        //Termina aq
+                        //if error { return;}
+                        ///Daq pra baixo vai ser tudo ignorado se der erro na conexao
+                        if(valorTotal.getValue() instanceof Double){
+                            Double valor = (Double) valorTotal.getValue();
+                            totalStr = String.format("R$ %.2f", valor);
+                        }
+
+                        System.out.println("passou");
+                        AlertDialog.Builder b = new AlertDialog.Builder(context);
+                        View dp = LayoutInflater.from(context).inflate(R.layout.dialog_inf,null);
+                        TextView txtTitleItemPedido = dp.findViewById(R.id.txtTitleItensPedidos);
+                        TextView txtTotalComanda = dp.findViewById(R.id.txtTotalPedidos);
+                        RecyclerView recyclerView = dp.findViewById(R.id.recyclerItensPedido);
+                        RecyclerView.LayoutManager ln = new LinearLayoutManager(context);
+                        AdapterItensPedido adp = new AdapterItensPedido(context,pr);
+                        recyclerView.setLayoutManager(ln);
+                        recyclerView.setItemAnimator(new DefaultItemAnimator());
+                        recyclerView.setAdapter(adp);
+                        txtTotalComanda.setText(totalStr);
+                        txtTitleItemPedido.setText(pedidos.get(position));
+
+
+                        b.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialogDelete.dismiss();
+
+                            }
+                        });
+                        b.setNegativeButton("Deletar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //codigo que deleta pedido dos bancos off e online
+
+                            }
+                        });
+
+                        b.setView(dp);
+                        context.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                dialogDelete = b.create();
+                                dialogDelete.show();
+                            }
+                        });
                     }
-                });
-                b.setNegativeButton("Deletar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //codigo que deleta pedido dos bancos off e online
-
-                    }
-                });
-
-                b.setView(dp);
-                dialogDelete = b.create();
-                dialogDelete.show();
+                };
+                new Thread(runnable).start();
             }
         });
     }
