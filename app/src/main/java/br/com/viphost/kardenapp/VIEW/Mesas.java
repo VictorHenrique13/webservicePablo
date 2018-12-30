@@ -288,7 +288,7 @@ public class Mesas extends AppCompatActivity {
         });
         //fim flaoting button
         //recycler view inicio
-        if(BinaryTool.BitValueOfInt(DB.getPermissao(),4)==false||true&&true||BinaryTool.BitValueOfInt(DB.getPermissao(),2)==true){
+        if(BinaryTool.BitValueOfInt(DB.getPermissao(),4)==false/*||true&&true||*/&&BinaryTool.BitValueOfInt(DB.getPermissao(),2)==true){
             AdapterPedidos adp = new AdapterPedidos(Mesas.this,ms);
             recyclerView.setAdapter(adp);
             atualizarMesas = new AtualizarMesas(this,ms,recyclerView,adp);

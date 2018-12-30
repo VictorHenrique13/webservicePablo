@@ -2,12 +2,14 @@ package br.com.viphost.kardenapp.VIEW.Adapter;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -15,7 +17,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import br.com.viphost.kardenapp.CONTROLLER.connections.adapter.pedidos.ObterPedidos;
+import br.com.viphost.kardenapp.CONTROLLER.utils.Balao;
 import br.com.viphost.kardenapp.MODEL.ItemPedido;
+import br.com.viphost.kardenapp.MODEL.Ponteiro;
 import br.com.viphost.kardenapp.MODEL.Produto;
 import br.com.viphost.kardenapp.R;
 import br.com.viphost.kardenapp.VIEW.Holder.ViewH;
@@ -48,17 +53,39 @@ public class AdapterPedidos extends RecyclerView.Adapter<ViewH> {
             @Override
             public void onClick(View v) {
                 String totalStr = "Total não calculado";
-                ///////Conexao Vai aq///
-                ItemPedido itemPedido = new ItemPedido(1,new Produto(1,"Lasanha",10,10.00,"Massas"));
-                pr.add(itemPedido);
-                double valorTotal = 3234;
-                //Conexao conexao = new Conexao(activity, pr);
-                //double valorTotal = conexao.run();
-                totalStr = String.format("R$ %.2f", valorTotal);
+                int numeroMesa;
+                try{
+                    numeroMesa= Integer.parseInt(pedidos.get(position));
+                }catch (Exception e){
+                    new Balao(context,"Numero da mesa incorreto", Toast.LENGTH_SHORT);
+                    return;
+                }
+                ///////Conexao começa aq///
+                Ponteiro valorTotal = new Ponteiro("Total não calculado");
+                ObterPedidos obterPedidos = new ObterPedidos(context,numeroMesa,pr,valorTotal);
+                //ProgressDialog progressDialog = ProgressDialog.show(context, "Carregando pedidos...","Carregando pedidos, aguarde...",true,false);
+
+                obterPedidos.run(false);
+
+                //obterPedidos.esperarTerminar(10000);
+                int result = obterPedidos.gerResult();
+                if(result==1){
+                    if(valorTotal.getValue() instanceof Double){
+                        Double valor = (Double) valorTotal.getValue();
+                        totalStr = String.format("R$ %.2f", valor);
+                    }
+                }else if(result==0){
+                    new Balao(context,"Não carregado", Toast.LENGTH_SHORT);
+                    return;
+                }else{//Erro na conexao, ela ja vai gerar o seu propio Toast
+                    System.out.println("erro para puxar pedidos");
+                    return;
+                }
                 //Termina aq
                 //if error { return;}
 
-                //Daq pra baixo vai ser tudo ignorado se der erro na conexao
+                ///Daq pra baixo vai ser tudo ignorado se der erro na conexao
+                System.out.println("passou");
                 AlertDialog.Builder b = new AlertDialog.Builder(context);
                 View dp = LayoutInflater.from(context).inflate(R.layout.dialog_inf,null);
                 TextView txtTitleItemPedido = dp.findViewById(R.id.txtTitleItensPedidos);
