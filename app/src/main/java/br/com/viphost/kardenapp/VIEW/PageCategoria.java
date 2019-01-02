@@ -2,6 +2,7 @@ package br.com.viphost.kardenapp.VIEW;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -53,6 +54,8 @@ public class PageCategoria extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ArrayList<Produto> prod = new ArrayList<Produto>();
     private Produto produto;
+    int clickG = 0;
+    private SearchView searchView;
     private BottomSheetDialog bottomSheetDialog;
     private TextView NomeSliding;
     private TextView EmailSliding;
@@ -81,6 +84,7 @@ public class PageCategoria extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         bottomAppBar = findViewById(R.id.bottomProdutoSingle);
         iconSearch = findViewById(R.id.searchProdutoSingle);
+        searchView = findViewById(R.id.searchT);
         carShop = findViewById(R.id.carShopProdutoSingle);
         recyclerView = findViewById(R.id.recyclerPageCategoria);
         menu = findViewById(R.id.menuProdutoSingle);
@@ -109,6 +113,22 @@ public class PageCategoria extends AppCompatActivity {
         //--------------------------------------------
         t.setTitle(info);
         t.setDisplayHomeAsUpEnabled(true);
+        iconSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(clickG==0){
+                    t.setDisplayShowTitleEnabled(false);
+                    searchView.setVisibility(View.VISIBLE);
+                    searchView.setIconified(false);
+                    searchView.setActivated(false);
+                    clickG++;
+                }else{
+                    clickG--;
+                    searchView.setVisibility(View.GONE);
+                    t.setDisplayShowTitleEnabled(true);
+                }
+            }
+        });
         menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

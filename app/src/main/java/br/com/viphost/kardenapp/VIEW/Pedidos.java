@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -58,6 +59,7 @@ public class Pedidos extends AppCompatActivity {
     private FloatingActionButton floatingActionButton;
     private ImageView iconSearch;
     private  ImageView menuUp;
+    int clickG =0;
     //menu referencia
     private BottomSheetDialog bottomSheetDialog;
     private TextInputLayout layNomeProdCad;
@@ -68,6 +70,7 @@ public class Pedidos extends AppCompatActivity {
     private TextInputEditText edtPrecoProdCad;
     private TextView btnConfirmCad;
     private TextView btnCancelCad;
+    private SearchView searchView;
     private LinearLayout btnCadastrarProduto;
     private LinearLayout btnIrParaPedidos;
     private Spinner spinner;
@@ -89,6 +92,7 @@ public class Pedidos extends AppCompatActivity {
         bottomAppBar = findViewById(R.id.bottomAppBar);
         setSupportActionBar(toolbar);
         iconSearch = findViewById(R.id.iconSearch);
+        searchView = findViewById(R.id.searchT);
         menuUp = findViewById(R.id.menuUp);
         ActionBar t = getSupportActionBar();
         t.setTitle("Pedidos");
@@ -100,7 +104,23 @@ public class Pedidos extends AppCompatActivity {
         DadosPessoais dadosPessoais = DB.getDadosPessoais();
         NomeSliding.setText(dadosPessoais.getNome());
         EmailSliding.setText(dadosPessoais.getEmail());
+        iconSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                if(clickG==0){
+                    t.setDisplayShowTitleEnabled(false);
+                    searchView.setVisibility(View.VISIBLE);
+                    searchView.setIconified(false);
+                    searchView.setActivated(false);
+                    clickG++;
+                }else{
+                    clickG--;
+                    searchView.setVisibility(View.GONE);
+                    t.setDisplayShowTitleEnabled(true);
+                }
+            }
+        });
         new AtualizarPermissao(this).run(true);
         if(BinaryTool.BitValueOfInt(DB.getPermissao(),4)==false){
             CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams)floatingActionButton.getLayoutParams();

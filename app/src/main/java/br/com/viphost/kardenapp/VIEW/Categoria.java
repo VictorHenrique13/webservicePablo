@@ -3,6 +3,7 @@ package br.com.viphost.kardenapp.VIEW;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -63,16 +64,18 @@ public class Categoria extends AppCompatActivity {
     private Button btnSaveCategoria;
     private FloatingActionButton floatingActionButton;
     private ImageView iconSearch;
+    private SearchView searchView;
     private ImageView carShop;
     private  ImageView menuUp;
     private  String texto;
+
     private BottomSheetDialog bottomSheetDialog;
     private LinearLayout btnCadastrarProdutoDialog;
     private TextView NomeSliding;
     private TextView EmailSliding;
 
     //-----------------menu referencias
-
+    int clickG = 0;
     private TextInputLayout layNomeProdCad;
     private TextInputLayout layPrecoCad;
     private TextInputLayout layQuantidadeCad;
@@ -100,9 +103,11 @@ public class Categoria extends AppCompatActivity {
         floatingActionButton = findViewById(R.id.floatingG);
         recyclerView = findViewById(R.id.recyclerCategoria);
         iconSearch = findViewById(R.id.iconSearch);
+        searchView = findViewById(R.id.searchT);
         carShop =findViewById(R.id.imgCarrinho);
         menuUp = findViewById(R.id.menuUp);
         DB = new DbOpenhelper(this);
+
         setSupportActionBar(toolbar);
         ActionBar t = getSupportActionBar();
         t.setTitle("Categoria");
@@ -119,6 +124,25 @@ public class Categoria extends AppCompatActivity {
             //((View) floatingActionButton).setVisibility(View.GONE);
             //Esconder o botao de cadastro
         }
+        iconSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                if(clickG==0){
+                    t.setDisplayShowTitleEnabled(false);
+                    searchView.setVisibility(View.VISIBLE);
+                    searchView.setIconified(false);
+                    searchView.setActivated(false);
+                    clickG++;
+                }else{
+                    clickG--;
+                    searchView.setVisibility(View.GONE);
+                    t.setDisplayShowTitleEnabled(true);
+                }
+
+            }
+        });
         carShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

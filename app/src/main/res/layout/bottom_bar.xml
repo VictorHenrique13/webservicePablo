@@ -16,6 +16,7 @@
         app:fabCradleMargin="0dp">
 
         <ImageView
+            android:clickable="true"
             android:id="@+id/iconSearch"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

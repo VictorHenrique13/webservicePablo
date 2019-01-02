@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -12,11 +13,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -68,7 +73,9 @@ public class Mesas extends AppCompatActivity {
     private EditText edtMesas;
     private Button btnSave;
     private AlertDialog close;
-    private ImageView carShop;
+    int clickG=0;
+    private SearchView searchView;
+     private ImageView carShop;
     private ImageView menuUp;
     private AtualizarMesas atualizarMesas;
     //private AdapterNoIcon adp;
@@ -109,8 +116,18 @@ public class Mesas extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar t = getSupportActionBar();
         t.setTitle("Mesa");
+
         t.setDisplayHomeAsUpEnabled(true);
         carShop.setVisibility(View.GONE);
+        searchView = findViewById(R.id.searchT);
+        iconSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                t.setDisplayShowTitleEnabled(false);
+                searchView.setVisibility(View.VISIBLE);
+            }
+        });
+
         //floatingActionButton.hide();
         //menu deslizante para cima
         bottomSheetDialog = new BottomSheetDialog(Mesas.this,R.style.BottomSheetDialog);
@@ -152,6 +169,12 @@ public class Mesas extends AppCompatActivity {
             public void onClick(View v) {
                 Intent m = new Intent(getApplicationContext(),Pedidos.class);
                 startActivity(m);
+            }
+        });
+        iconSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
         btnCadastrarProduto.setOnClickListener(new View.OnClickListener() {
@@ -240,6 +263,7 @@ public class Mesas extends AppCompatActivity {
         //--------------------------------------
         //--------------------------------------------------
         //inicio floating button
+
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -385,6 +409,14 @@ public class Mesas extends AppCompatActivity {
         close.show();
         //super.onBackPressed();
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu_search,menu);
+        return true;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();

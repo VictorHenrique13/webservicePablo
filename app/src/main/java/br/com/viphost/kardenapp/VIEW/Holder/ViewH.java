@@ -1,5 +1,6 @@
 package br.com.viphost.kardenapp.VIEW.Holder;
 
+import android.annotation.SuppressLint;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,6 +31,7 @@ public class ViewH extends RecyclerView.ViewHolder {
     public TextView txtQtdProduto;
     public TextView totalItemProd;
     //-----------------
+    @SuppressLint("CutPasteId")
     public ViewH(@NonNull View itemView) {
         super(itemView);
         txtTitleMesa = itemView.findViewById(R.id.txtTitleMesa);

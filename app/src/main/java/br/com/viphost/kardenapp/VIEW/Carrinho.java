@@ -3,6 +3,7 @@ package br.com.viphost.kardenapp.VIEW;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -54,6 +55,7 @@ public class Carrinho extends AppCompatActivity {
     private ImageView iconSearch;
     private ImageView menu;
     private ImageView carShop;
+    private SearchView searchView;
     private RecyclerView recyclerView;
     private ArrayList<Produto> prods = new ArrayList<>();
     private AlertDialog confirm;
@@ -61,7 +63,7 @@ public class Carrinho extends AppCompatActivity {
     private TextView NomeSliding;
     private TextView EmailSliding;
     private DbOpenhelper DB;
-
+    int clickG = 0;
 
     private TextInputLayout layNomeProdCad;
     private TextInputLayout layPrecoCad;
@@ -86,6 +88,7 @@ public class Carrinho extends AppCompatActivity {
         bottomAppBar = findViewById(R.id.bottomAppBar);
         floatingActionButton = findViewById(R.id.floatingG);
         iconSearch = findViewById(R.id.iconSearch);
+        searchView = findViewById(R.id.searchT);
         carShop = findViewById(R.id.imgCarrinho);
         menu = findViewById(R.id.menuUp);
         recyclerView =findViewById(R.id.recyclerCarrinho);
@@ -101,10 +104,27 @@ public class Carrinho extends AppCompatActivity {
             //((View) floatingActionButton).setVisibility(View.GONE);
             //Esconder o botao de cadastro
         }
+
         setSupportActionBar(toolbar);
         ActionBar t = getSupportActionBar();
         t.setTitle("Carrinho (Mesa: "+Memoria.getMesaAtual()+")");
         t.setDisplayHomeAsUpEnabled(true);
+        iconSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(clickG==0){
+                    t.setDisplayShowTitleEnabled(false);
+                    searchView.setVisibility(View.VISIBLE);
+                    searchView.setIconified(false);
+                    searchView.setActivated(false);
+                    clickG++;
+                }else{
+                    clickG--;
+                    searchView.setVisibility(View.GONE);
+                    t.setDisplayShowTitleEnabled(true);
+                }
+            }
+        });
         final AdapterSingleCategoria adp = new AdapterSingleCategoria(Carrinho.this,prods);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(Carrinho.this);
         bottomSheetDialog = new BottomSheetDialog(Carrinho.this);

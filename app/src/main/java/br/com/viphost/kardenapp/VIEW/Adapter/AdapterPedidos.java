@@ -48,7 +48,7 @@ public class AdapterPedidos extends RecyclerView.Adapter<ViewH> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewH holder, int position) {
-        holder.txtTitleMesa.setText(pedidos.get(position));
+        holder.txtTitleMesa.setText("Mesa "+pedidos.get(position));
         holder.txtTitleMesa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,7 +96,7 @@ public class AdapterPedidos extends RecyclerView.Adapter<ViewH> {
                         }
 
                         System.out.println("passou");
-                        AlertDialog.Builder b = new AlertDialog.Builder(context);
+                        AlertDialog.Builder b = new AlertDialog.Builder(context,R.style.dialogCustom);
                         View dp = LayoutInflater.from(context).inflate(R.layout.dialog_inf,null);
                         TextView txtTitleItemPedido = dp.findViewById(R.id.txtTitleItensPedidos);
                         TextView txtTotalComanda = dp.findViewById(R.id.txtTotalPedidos);
@@ -107,7 +107,7 @@ public class AdapterPedidos extends RecyclerView.Adapter<ViewH> {
                         recyclerView.setItemAnimator(new DefaultItemAnimator());
                         recyclerView.setAdapter(adp);
                         txtTotalComanda.setText(totalStr);
-                        txtTitleItemPedido.setText(pedidos.get(position));
+                        txtTitleItemPedido.setText("Mesa "+pedidos.get(position));
 
 
                         b.setPositiveButton("Ok", new DialogInterface.OnClickListener() {

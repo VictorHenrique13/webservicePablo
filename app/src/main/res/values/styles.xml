@@ -17,4 +17,10 @@
     <style name="dailogPerson" parent="Theme.AppCompat.Dialog.Alert">
         <item name="android:colorAccent" tools:ignore="NewApi">@color/colorPrimaryDark</item>
     </style>
+    <style name="dialogCustom" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="colorAccent">@color/colorPrimaryDark</item>
+        <item name="dialogCornerRadius">8dp</item>
+        <item name="textColorAlertDialogListItem">@color/colorPrimaryDark</item>
+        <item name="textAppearanceListItemSecondary">@color/colorPrimaryDark</item>
+    </style>
 </resources>
