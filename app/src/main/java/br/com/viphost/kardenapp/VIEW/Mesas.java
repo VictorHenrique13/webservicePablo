@@ -174,7 +174,17 @@ public class Mesas extends AppCompatActivity {
         iconSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if(clickG==0){
+                    t.setDisplayShowTitleEnabled(false);
+                    searchView.setVisibility(View.VISIBLE);
+                    searchView.setIconified(false);
+                    searchView.setActivated(false);
+                    clickG++;
+                }else{
+                    clickG--;
+                    searchView.setVisibility(View.GONE);
+                    t.setDisplayShowTitleEnabled(true);
+                }
             }
         });
         btnCadastrarProduto.setOnClickListener(new View.OnClickListener() {
