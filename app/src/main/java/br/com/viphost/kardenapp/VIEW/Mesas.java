@@ -24,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -41,6 +42,7 @@ import br.com.viphost.kardenapp.CONTROLLER.GraphqlError;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlResponse;
 import br.com.viphost.kardenapp.CONTROLLER.connections.AtualizarPermissao;
 import br.com.viphost.kardenapp.CONTROLLER.connections.menudeslizante.EnviarCadastroProduto;
+import br.com.viphost.kardenapp.CONTROLLER.listeners.SearchViewListener;
 import br.com.viphost.kardenapp.CONTROLLER.mutations.CadastrarMesa;
 import br.com.viphost.kardenapp.CONTROLLER.mutations.Logout;
 import br.com.viphost.kardenapp.CONTROLLER.tipos.Logico;
@@ -120,13 +122,17 @@ public class Mesas extends AppCompatActivity {
         t.setDisplayHomeAsUpEnabled(true);
         carShop.setVisibility(View.GONE);
         searchView = findViewById(R.id.searchT);
-        iconSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                t.setDisplayShowTitleEnabled(false);
-                searchView.setVisibility(View.VISIBLE);
-            }
-        });
+        ArrayList<String> searchArray = new ArrayList<>();
+        AdapterNoIcon searchAdp = new AdapterNoIcon(Mesas.this, searchArray);
+        SearchViewListener searchViewListener = new SearchViewListener(Mesas.this,searchAdp,searchArray);
+        searchView.setOnQueryTextListener(searchViewListener);
+//        iconSearch.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                t.setDisplayShowTitleEnabled(false);
+//                searchView.setVisibility(View.VISIBLE);
+//            }
+//        });
 
         //floatingActionButton.hide();
         //menu deslizante para cima
@@ -176,6 +182,8 @@ public class Mesas extends AppCompatActivity {
             public void onClick(View v) {
                 if(clickG==0){
                     t.setDisplayShowTitleEnabled(false);
+                    recyclerView.setVisibility(View.GONE);
+                    //recyclerViewSearch.setVisibility(View.VISIBLE);
                     searchView.setVisibility(View.VISIBLE);
                     searchView.setIconified(false);
                     searchView.setActivated(false);
@@ -183,6 +191,8 @@ public class Mesas extends AppCompatActivity {
                 }else{
                     clickG--;
                     searchView.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    //recyclerViewSearch.setVisibility(View.GONE);
                     t.setDisplayShowTitleEnabled(true);
                 }
             }
