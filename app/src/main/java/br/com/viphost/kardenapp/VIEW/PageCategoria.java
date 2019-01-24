@@ -1,5 +1,6 @@
 package br.com.viphost.kardenapp.VIEW;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -8,6 +9,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -29,6 +31,7 @@ import br.com.viphost.kardenapp.CONTROLLER.GraphqlResponse;
 import br.com.viphost.kardenapp.CONTROLLER.connections.AtualizarPermissao;
 import br.com.viphost.kardenapp.CONTROLLER.connections.menudeslizante.EnviarCadastroProduto;
 import br.com.viphost.kardenapp.CONTROLLER.connections.pagecategoria.AtualizarProdutos;
+import br.com.viphost.kardenapp.CONTROLLER.listeners.pagecategoria.SearchViewListener;
 import br.com.viphost.kardenapp.CONTROLLER.tipos.ListaProdutos;
 import br.com.viphost.kardenapp.CONTROLLER.queries.ListarProdutos;
 import br.com.viphost.kardenapp.CONTROLLER.utils.Balao;
@@ -38,6 +41,8 @@ import br.com.viphost.kardenapp.MODEL.DadosPessoais;
 import br.com.viphost.kardenapp.MODEL.Produto;
 import br.com.viphost.kardenapp.R;
 import br.com.viphost.kardenapp.VIEW.Adapter.AdapterSingleCategoria;
+import br.com.viphost.kardenapp.VIEW.Adapter.AdapterWithIcon;
+
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.textfield.TextInputEditText;
@@ -113,6 +118,35 @@ public class PageCategoria extends AppCompatActivity {
         //--------------------------------------------
         t.setTitle(info);
         t.setDisplayHomeAsUpEnabled(true);
+        ////Search////////////////////////////////////////
+        searchView = findViewById(R.id.searchT);
+        ArrayList<Produto> searchArray = new ArrayList<>();
+        searchArray = DB.getListaProdutos(info);
+        AdapterSingleCategoria searchAdp = new AdapterSingleCategoria(PageCategoria.this, searchArray);
+        SearchViewListener searchViewListener = new SearchViewListener(PageCategoria.this,searchAdp,searchArray,info);
+        searchView.setOnQueryTextListener(searchViewListener);
+        RecyclerView searchRecyclerView = findViewById(R.id.recyclerSearchPageCategoria);
+
+        searchRecyclerView.setAdapter(searchAdp);
+        RecyclerView.LayoutManager searchLayoutMananger = new LinearLayoutManager(PageCategoria.this);
+        searchRecyclerView.setLayoutManager(searchLayoutMananger);
+        searchRecyclerView.setHasFixedSize(true);
+        searchRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        searchRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @SuppressLint("RestrictedApi")
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if(dy>0){
+                    bottomAppBar.setVisibility(View.GONE);
+                    //floatingActionButton.setVisibility(View.GONE);
+                }else{
+                    bottomAppBar.setVisibility(View.VISIBLE);
+                    //floatingActionButton.setVisibility(View.VISIBLE);
+                }
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
+        ////Search//////////////Fim//////////////////////////
         iconSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,10 +155,15 @@ public class PageCategoria extends AppCompatActivity {
                     searchView.setVisibility(View.VISIBLE);
                     searchView.setIconified(false);
                     searchView.setActivated(false);
+                    recyclerView.setVisibility(View.GONE);
+                    searchRecyclerView.setVisibility(View.VISIBLE);
+                    searchViewListener.updateOnShow();
                     clickG++;
                 }else{
                     clickG--;
                     searchView.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    searchRecyclerView.setVisibility(View.GONE);
                     t.setDisplayShowTitleEnabled(true);
                 }
             }

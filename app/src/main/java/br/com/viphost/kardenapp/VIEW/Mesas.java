@@ -13,8 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -24,7 +22,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -42,19 +39,17 @@ import br.com.viphost.kardenapp.CONTROLLER.GraphqlError;
 import br.com.viphost.kardenapp.CONTROLLER.GraphqlResponse;
 import br.com.viphost.kardenapp.CONTROLLER.connections.AtualizarPermissao;
 import br.com.viphost.kardenapp.CONTROLLER.connections.menudeslizante.EnviarCadastroProduto;
-import br.com.viphost.kardenapp.CONTROLLER.listeners.SearchViewListener;
+import br.com.viphost.kardenapp.CONTROLLER.listeners.mesas.SearchViewListener;
 import br.com.viphost.kardenapp.CONTROLLER.mutations.CadastrarMesa;
 import br.com.viphost.kardenapp.CONTROLLER.mutations.Logout;
 import br.com.viphost.kardenapp.CONTROLLER.tipos.Logico;
 
 import br.com.viphost.kardenapp.CONTROLLER.connections.mesas.AtualizarMesas;
-import br.com.viphost.kardenapp.CONTROLLER.tipos.Mesa;
 import br.com.viphost.kardenapp.CONTROLLER.utils.Balao;
 import br.com.viphost.kardenapp.CONTROLLER.utils.BinaryTool;
 import br.com.viphost.kardenapp.MODEL.DadosPessoais;
 import br.com.viphost.kardenapp.R;
 import br.com.viphost.kardenapp.VIEW.Adapter.AdapterNoIcon;
-import br.com.viphost.kardenapp.VIEW.Adapter.AdapterPedidos;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -66,6 +61,7 @@ import java.util.ArrayList;
 
 public class Mesas extends AppCompatActivity {
     private Toolbar toolbar;
+    private ActionBar t;
     private BottomAppBar bottomBar;
     private AlertDialog dialogMesa;
     private ImageView iconSearch;
@@ -77,6 +73,7 @@ public class Mesas extends AppCompatActivity {
     private AlertDialog close;
     int clickG=0;
     private SearchView searchView;
+    private RecyclerView searchRecyclerView;
      private ImageView carShop;
     private ImageView menuUp;
     private AtualizarMesas atualizarMesas;
@@ -116,16 +113,40 @@ public class Mesas extends AppCompatActivity {
         carShop = findViewById(R.id.imgCarrinho);
         DB = new DbOpenhelper(this);
         setSupportActionBar(toolbar);
-        ActionBar t = getSupportActionBar();
+        t = getSupportActionBar();
         t.setTitle("Mesa");
 
         t.setDisplayHomeAsUpEnabled(true);
         carShop.setVisibility(View.GONE);
+        ////Search////////////////////////////////////////
         searchView = findViewById(R.id.searchT);
+        searchRecyclerView = findViewById(R.id.recyclerSearchMesas);
         ArrayList<String> searchArray = new ArrayList<>();
+        searchArray = DB.getListaMesas();
         AdapterNoIcon searchAdp = new AdapterNoIcon(Mesas.this, searchArray);
         SearchViewListener searchViewListener = new SearchViewListener(Mesas.this,searchAdp,searchArray);
         searchView.setOnQueryTextListener(searchViewListener);
+
+        searchRecyclerView.setAdapter(searchAdp);
+        RecyclerView.LayoutManager searchLayoutMananger = new LinearLayoutManager(Mesas.this);
+        searchRecyclerView.setLayoutManager(searchLayoutMananger);
+        searchRecyclerView.setHasFixedSize(true);
+        searchRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        searchRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @SuppressLint("RestrictedApi")
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if(dy>0){
+                    bottomBar.setVisibility(View.GONE);
+                    floatingActionButton.setVisibility(View.GONE);
+                }else{
+                    bottomBar.setVisibility(View.VISIBLE);
+                    floatingActionButton.setVisibility(View.VISIBLE);
+                }
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
+        ////Search//////////////Fim//////////////////////////
 //        iconSearch.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -182,16 +203,19 @@ public class Mesas extends AppCompatActivity {
             public void onClick(View v) {
                 if(clickG==0){
                     t.setDisplayShowTitleEnabled(false);
-                    recyclerView.setVisibility(View.GONE);
                     //recyclerViewSearch.setVisibility(View.VISIBLE);
                     searchView.setVisibility(View.VISIBLE);
                     searchView.setIconified(false);
                     searchView.setActivated(false);
+                    recyclerView.setVisibility(View.GONE);
+                    searchRecyclerView.setVisibility(View.VISIBLE);
+                    searchViewListener.updateOnShow();
                     clickG++;
                 }else{
                     clickG--;
                     searchView.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.VISIBLE);
+                    searchRecyclerView.setVisibility(View.GONE);
                     //recyclerViewSearch.setVisibility(View.GONE);
                     t.setDisplayShowTitleEnabled(true);
                 }
@@ -384,6 +408,15 @@ public class Mesas extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        if(clickG!=0){
+            clickG--;
+            searchView.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+            searchRecyclerView.setVisibility(View.GONE);
+            //recyclerViewSearch.setVisibility(View.GONE);
+            t.setDisplayShowTitleEnabled(true);
+            return;
+        }
 
         AlertDialog.Builder b = new AlertDialog.Builder(Mesas.this);
         b.setMessage("Deseja realmente sair da sessão");

@@ -1,5 +1,6 @@
 package br.com.viphost.kardenapp.VIEW.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,10 +17,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class AdapterSingleCategoria extends RecyclerView.Adapter<ViewH> {
-    private Context context;
+    private Activity context;
     private ArrayList<Produto> produtos;
 
-    public AdapterSingleCategoria(Context context, ArrayList<Produto> produtos) {
+    public AdapterSingleCategoria(Activity context, ArrayList<Produto> produtos) {
         this.context = context;
         this.produtos = produtos;
     }

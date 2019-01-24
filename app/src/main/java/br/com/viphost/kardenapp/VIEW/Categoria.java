@@ -35,6 +35,7 @@ import br.com.viphost.kardenapp.CONTROLLER.GraphqlResponse;
 import br.com.viphost.kardenapp.CONTROLLER.connections.AtualizarPermissao;
 import br.com.viphost.kardenapp.CONTROLLER.connections.categoria.AtualizarCategorias;
 import br.com.viphost.kardenapp.CONTROLLER.connections.menudeslizante.EnviarCadastroProduto;
+import br.com.viphost.kardenapp.CONTROLLER.listeners.categoria.SearchViewListener;
 import br.com.viphost.kardenapp.CONTROLLER.tipos.ListaCategorias;
 import br.com.viphost.kardenapp.CONTROLLER.mutations.CadastrarCategoria;
 import br.com.viphost.kardenapp.CONTROLLER.queries.ListarCategorias;
@@ -44,6 +45,7 @@ import br.com.viphost.kardenapp.CONTROLLER.utils.BinaryTool;
 import br.com.viphost.kardenapp.CONTROLLER.utils.Memoria;
 import br.com.viphost.kardenapp.MODEL.DadosPessoais;
 import br.com.viphost.kardenapp.R;
+import br.com.viphost.kardenapp.VIEW.Adapter.AdapterNoIcon;
 import br.com.viphost.kardenapp.VIEW.Adapter.AdapterWithIcon;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -113,6 +115,35 @@ public class Categoria extends AppCompatActivity {
         t.setTitle("Categoria");
         t.setDisplayHomeAsUpEnabled(true);
 
+        ////Search////////////////////////////////////////
+        searchView = findViewById(R.id.searchT);
+        ArrayList<String> searchArray = new ArrayList<>();
+        searchArray = DB.getListaCategoria();
+        AdapterWithIcon searchAdp = new AdapterWithIcon(Categoria.this, searchArray);
+        SearchViewListener searchViewListener = new SearchViewListener(Categoria.this,searchAdp,searchArray);
+        searchView.setOnQueryTextListener(searchViewListener);
+        RecyclerView searchRecyclerView = findViewById(R.id.recyclerSearchCategoria);
+
+        searchRecyclerView.setAdapter(searchAdp);
+        RecyclerView.LayoutManager searchLayoutMananger = new LinearLayoutManager(Categoria.this);
+        searchRecyclerView.setLayoutManager(searchLayoutMananger);
+        searchRecyclerView.setHasFixedSize(true);
+        searchRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        searchRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @SuppressLint("RestrictedApi")
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if(dy>0){
+                    bottomAppBar.setVisibility(View.GONE);
+                    floatingActionButton.setVisibility(View.GONE);
+                }else{
+                    bottomAppBar.setVisibility(View.VISIBLE);
+                    floatingActionButton.setVisibility(View.VISIBLE);
+                }
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
+        ////Search//////////////Fim//////////////////////////
         new AtualizarPermissao(this).run(true);
         if(BinaryTool.BitValueOfInt(DB.getPermissao(),6)==false){
             CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams)floatingActionButton.getLayoutParams();
@@ -134,10 +165,15 @@ public class Categoria extends AppCompatActivity {
                     searchView.setVisibility(View.VISIBLE);
                     searchView.setIconified(false);
                     searchView.setActivated(false);
+                    recyclerView.setVisibility(View.GONE);
+                    searchRecyclerView.setVisibility(View.VISIBLE);
+                    searchViewListener.updateOnShow();
                     clickG++;
                 }else{
                     clickG--;
                     searchView.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    searchRecyclerView.setVisibility(View.GONE);
                     t.setDisplayShowTitleEnabled(true);
                 }
 

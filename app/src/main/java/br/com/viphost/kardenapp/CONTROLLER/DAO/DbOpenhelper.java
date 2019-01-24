@@ -187,6 +187,20 @@ public class DbOpenhelper extends SQLiteOpenHelper {
         db.close();
         return  nameCategoria;
     }
+    public ArrayList<String> getListaCategoria(String partOfText){
+        db = getReadableDatabase();
+        ArrayList<String> nameCategoria = new ArrayList<>();
+        Cursor c = db.rawQuery("select * from categoria where nomeCategoria like '%"+partOfText+"%'",null);
+
+        if(c.moveToFirst()){
+            do{
+                nameCategoria.add(c.getString(c.getColumnIndex("nomeCategoria")));
+
+            }while(c.moveToNext());
+        }
+        db.close();
+        return  nameCategoria;
+    }
     public ArrayList<String> getListaMesas(){
         db = getReadableDatabase();
          ArrayList<String> mesas = new ArrayList<>();
@@ -199,10 +213,39 @@ public class DbOpenhelper extends SQLiteOpenHelper {
          db.close();
          return mesas;
     }
+    public ArrayList<String> getListaMesas(String partOfText){
+        db = getReadableDatabase();
+        ArrayList<String> mesas = new ArrayList<>();
+        Cursor c = db.rawQuery("select * from mesa where numMesa like '%"+partOfText+"%'",null);
+        if(c.moveToFirst()){
+            do{
+                mesas.add(c.getString(c.getColumnIndex("numMesa")));
+            }while(c.moveToNext());
+        }
+        db.close();
+        return mesas;
+    }
     public ArrayList<Produto> getListaProdutos(String categoriaNome){
         db = getReadableDatabase();
         ArrayList<Produto> produtos = new ArrayList<>();
         Cursor c = db.rawQuery("select * from produto where nomeCategoria = '"+categoriaNome+"'",null);
+        //Cursor c = db.rawQuery("select * from produto",null);
+        if(c.moveToFirst()){
+            do{
+                int id = c.getInt(c.getColumnIndex("id"));
+                String nome = c.getString(c.getColumnIndex("nome"));
+                double valor = c.getDouble(c.getColumnIndex("valor"));
+                String categoria = c.getString(c.getColumnIndex("nomeCategoria"));
+                Produto p = new Produto(id,nome,0,valor,categoria);
+                produtos.add(p);
+            }while (c.moveToNext());
+        }
+        return produtos;
+    }
+    public ArrayList<Produto> getListaProdutos(String categoriaNome, String partOfText){
+        db = getReadableDatabase();
+        ArrayList<Produto> produtos = new ArrayList<>();
+        Cursor c = db.rawQuery("select * from produto where nomeCategoria = '"+categoriaNome+"' and nome like '%"+partOfText+"%'",null);
         //Cursor c = db.rawQuery("select * from produto",null);
         if(c.moveToFirst()){
             do{
