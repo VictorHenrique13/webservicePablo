@@ -35,7 +35,7 @@
         $stmt->bindParam(":idpaciente",$imc->idpaciente);
         $stmt->execute();
 
-       return echo json_encode($conn->lastInsertId());
+        echo json_encode($conn->lastInsertId());
         
     });
 
