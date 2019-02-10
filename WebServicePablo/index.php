@@ -14,9 +14,9 @@
 
 
     $app = new \Slim\App;
-    //header('Content-type: application/json');
-    /////////////////////////////////////////////////////////////////////////////////
-///
+    header('Content-type: application/json');
+
+    $app->response()->header('Content-Type', 'application/json;charset=utf-8');
 
     $app->get('/prod', function (Request $request, Response $response, array $args) {
 
@@ -24,7 +24,7 @@
 
         return $response;
     });
-    $app->post('/imc/{imc}',function (Request $request, Response $response, array $args){
+    $app->get('/imc/{imc}',function (Request $request, Response $response, array $args){
         $sql = "INSERT INTO imc(peso,altura,data,idpaciente) VALUES(:peso,:altura,:data,:idpaciente);";
         $imc = json_decode($request->getBody());
         $conn = new PDO("mysql:dbname=pablofica;host=localhost","root","");
@@ -34,8 +34,7 @@
         $stmt->bindParam(":data",$imc->data);
         $stmt->bindParam(":idpaciente",$imc->idpaciente);
         $stmt->execute();
-
-        echo json_encode($conn->lastInsertId());
+        $id = json_encode($conn->lastInsertId());
         
     });
 
